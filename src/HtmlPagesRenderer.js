@@ -64,7 +64,7 @@ export default class HtmlPagesRenderer extends React.Component {
     }.bind(this);
 
     var counter = 0;
-    var double = true;
+    var double = this.props.doublePage || false;
 
     return React.createElement(pagesRoot, {id: "section-to-print", style: this.props.style},double?
           _.chunk(pages, 2).map(function (item, index) {

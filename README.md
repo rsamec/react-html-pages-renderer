@@ -1,6 +1,8 @@
 # HtmlPagesRenderer
 
-__COMPONENT DESCRIPTION GOES HERE__
+It generates html pages for document according to [PTT](https://github.com/rsamec/ptt). It renders [react components](https://facebook.github.io/react/) to HTML.
+
+Pages are rendered in continuous sequence.
 
 
 ## Demo & Examples
@@ -30,21 +32,24 @@ npm install react-html-pages-renderer --save
 
 ## Usage
 
-__EXPLAIN USAGE HERE__
+
 
 ```
 var HtmlPagesRenderer = require('react-html-pages-renderer');
 
-<HtmlPagesRenderer>Example</HtmlPagesRenderer>
+<HtmlPagesRenderer widgets={Widgets} schema={schema}/>
 ```
 
 ### Properties
 
-* __DOCUMENT PROPERTIES HERE__
++	widgets - the list of widgets used for rendering
++	schema - document to print - [PTT](https://github.com/rsamec/ptt) format
++	data - data used to data bind values to schemas
++	pageOptions - height and width of the page , margin of the page
++	doublePage - it renders sequence of double pages, otherwise it renders single page sequence
+
 
 ### Notes
-
-__ADDITIONAL USAGE NOTES__
 
 
 ## Development (`src`, `lib` and the build process)
@@ -55,7 +60,7 @@ To build, watch and serve the examples (which will also watch the component sour
 
 ## License
 
-__PUT LICENSE HERE__
+MIT
 
 Copyright (c) 2016 Roman Samec.
 
