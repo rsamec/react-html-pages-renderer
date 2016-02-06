@@ -109,8 +109,8 @@ var _WidgetFactory2 = _interopRequireDefault(_WidgetFactory);
 
 var _reactRouter = require('react-router');
 
-//const URL = 'http://photo-papermill.rhcloud.com';
-var URL = "http://localhost:8080";
+var URL = 'http://photo-papermill.rhcloud.com';
+//const URL = "http://localhost:8080";
 
 var HtmlBook = (function (_React$Component) {
 	_inherits(HtmlBook, _React$Component);
