@@ -19,8 +19,11 @@ export default class HtmlPagesRenderer extends React.Component {
     var ctx = (this.props.schema.props && this.props.schema.props.context) || {};
     var customStyles = ctx['styles'] || {};
 
-    var code = ctx['code'] && ctx['code'].code;
-
+    var code = ctx['code'] && ctx['code'].compiled;
+	  //TODO: hacky way how to compile
+	if (code!== undefined) code = code.substr(code.indexOf('return')).replace('})();','');   
+	  
+	//console.log(code);
     var customCode = !!code ? new Function(code)() : undefined;
 
     var dataContext = this.props.dataContext;
