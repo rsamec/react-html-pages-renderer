@@ -1,0 +1,32 @@
+{
+  "name": "react-html-pages-renderer",
+  "version": "0.0.0",
+  "description": "HtmlPagesRenderer",
+  "main": "dist/react-html-pages-renderer.min.js",
+  "homepage": "https://github.com/rsamec/react-html-pages-renderer",
+  "authors": [
+    "Roman Samec"
+  ],
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "react",
+    "react-component"
+  ],
+  "license": "MIT",
+  "ignore": [
+    ".editorconfig",
+    ".gitignore",
+    "package.json",
+    "src",
+    "node_modules",
+    "example",
+    "test"
+  ],
+  "dependencies": {
+    "jquery": "~2.2.0"
+  }
+}
