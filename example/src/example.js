@@ -6,8 +6,8 @@ import HtmlPagesRenderer from 'react-html-pages-renderer';
 import Widgets from './WidgetFactory';
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 
-//const URL = 'http://photo-papermill.rhcloud.com';
-const URL = "http://localhost:8080";
+const URL = 'http://photo-papermill.rhcloud.com';
+//const URL = "http://localhost:8080";
 
 
 class HtmlBook extends React.Component {
