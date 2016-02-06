@@ -178,7 +178,7 @@ var HtmlBook = (function (_React$Component) {
 			return _react2['default'].createElement(
 				'div',
 				{ style: { paddingBottom: 10, paddingLeft: 10, paddingRight: 10 } },
-				_react2['default'].createElement(_reactHtmlPagesRenderer2['default'], { widgets: _WidgetFactory2['default'], schema: schema, dataContext: dataContext, pageOptions: this.state.pageOptions, doublePage: 'true' })
+				_react2['default'].createElement(_reactHtmlPagesRenderer2['default'], { widgets: _WidgetFactory2['default'], schema: schema, dataContext: dataContext, pageOptions: this.state.pageOptions, doublePage: true })
 			);
 		}
 	}]);
