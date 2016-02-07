@@ -138,7 +138,7 @@ var HtmlBook = (function (_React$Component) {
 						loaded: true,
 						schema: schema,
 						data: data.data || schema.props && schema.props.defaultData || {},
-						pageOptions: data.customData && data.customData.pageOptions || {},
+						pageOptions: data.customData && data.customData.pageOptions,
 						error: { hasError: false }
 					});
 				},
