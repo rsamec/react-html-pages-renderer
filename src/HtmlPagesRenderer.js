@@ -5,18 +5,24 @@ import _ from 'lodash';
 import HtmlPage from './HtmlPage.js';
 import WidgetRenderer from './WidgetRenderer';
 import transformToPages from './utils/transformToPages';
+import GraphicUtil from './utils/graphicUtil';
 
 export default class HtmlPagesRenderer extends React.Component {
   render() {
-    var pageOptions = this.props.pageOptions || {};
+	var schema = this.props.schema;
+
+    var defaultPageSizes = GraphicUtil.PageSizes[schema.props && schema.props.defaultPageSize || 'A4'];
+	var defaultPageOptions = {height: GraphicUtil.pointToPixel(defaultPageSizes[1]), width: GraphicUtil.pointToPixel(defaultPageSizes[0])};
+	  
+	var pageOptions = this.props.pageOptions || defaultPageOptions;
     var pageHeight = pageOptions.height;
     var pageMargin = pageOptions.margin || {};
     if (pageMargin.top !== undefined) pageHeight -= pageMargin.top;
     if (pageMargin.bottom !== undefined) pageHeight -= pageMargin.bottom;
 
     var pages = this.props.pages;
-    if (pages === undefined) pages = transformToPages(this.props.schema, pageHeight);
-    var ctx = (this.props.schema.props && this.props.schema.props.context) || {};
+    if (pages === undefined) pages = transformToPages(schema, pageHeight);
+    var ctx = (schema.props && schema.props.context) || {};
     var customStyles = ctx['styles'] || {};
 
     var code = ctx['code'] && ctx['code'].compiled;
@@ -31,9 +37,9 @@ export default class HtmlPagesRenderer extends React.Component {
     //append shared code to data context
     if (dataContext !== undefined) dataContext.customCode = customCode;
 
-    var pageBackground = (this.props.schema.props && this.props.schema.props.background) || {};
+    var pageBackground = (schema.props && schema.props.background) || {};
 
-    var items = this.props.schema.containers.map(function (container, i) {
+    var items = schema.containers.map(function (container, i) {
       var conProps = container.props;
       var conBindings = container.bindings;
       if (conBindings !== undefined && dataContext !== undefined) conProps = WidgetRenderer.bindProps(conProps, conBindings, dataContext);
@@ -51,7 +57,7 @@ export default class HtmlPagesRenderer extends React.Component {
     let createPage = function (page, i) {
       var back = normalizeBackgrounds[i];
       return (<HtmlPage key={'page' + i} position={i} pageNumber={page.pageNumber} widgets={this.props.widgets}
-                        background={back} pageOptions={this.props.pageOptions}>
+                        background={back} pageOptions={pageOptions}>
         {page.boxes.map(function (node, j) {
           var elName = node.element.elementName;
           var widget = <WidgetRenderer key={'page' + i + '_' + j} widget={this.props.widgets[elName]}

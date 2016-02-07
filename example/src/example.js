@@ -54,7 +54,7 @@ class HtmlBook extends React.Component {
 		var dataContext = Binder.bindToState(this, 'data');
 
 		return (<div style={{paddingBottom:10,paddingLeft:10,paddingRight:10}}>
-			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} doublePage="true"/>
+			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} doublePage={true}/>
 		</div>)
 	}
 }
