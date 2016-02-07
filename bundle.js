@@ -15722,6 +15722,142 @@ module.exports = exports["default"];
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _standardPageSizes = require('./standardPageSizes');
+
+var _standardPageSizes2 = _interopRequireDefault(_standardPageSizes);
+
+var GraphicPrimitive = (function () {
+	function GraphicPrimitive() {
+		_classCallCheck(this, GraphicPrimitive);
+	}
+
+	_createClass(GraphicPrimitive, null, [{
+		key: 'pointToPixel',
+		value: function pointToPixel(point) {
+			if (point === undefined) return;
+			var convertedPoint = point / 72 * GraphicPrimitive.DPI;
+			return Math.round(convertedPoint, 3);
+			//return parseFloat(convertedPoint.toFixed(3));
+		}
+	}, {
+		key: 'pixelToPoint',
+		value: function pixelToPoint(point) {
+			if (point === undefined) return;
+			var convertedPoint = point / GraphicPrimitive.DPI * 72;
+			return Math.round(convertedPoint, 3);
+			//return parseFloat(convertedPoint.toFixed(3));
+		}
+	}, {
+		key: 'DPI',
+		get: function get() {
+			return 96;
+		}
+	}, {
+		key: 'DefaultMargin',
+
+		//default margin for A4 format
+		get: function get() {
+			return 21.6;
+		}
+
+		//get page size for A4 format in points
+	}, {
+		key: 'DefaultPageSize',
+		get: function get() {
+			return [GraphicPrimitive.pointToPixel(_standardPageSizes2['default'].A4[0]), GraphicPrimitive.pointToPixel(_standardPageSizes2['default'].A4[1])];
+		}
+
+		//get page size for A4 format in pixels
+	}, {
+		key: 'DefaultPageSizeInPx',
+		get: function get() {
+			return [GraphicPrimitive.pointToPixel(_standardPageSizes2['default'].A4[0]), GraphicPrimitive.pointToPixel(_standardPageSizes2['default'].A4[1])];
+		}
+	}, {
+		key: 'PageSizes',
+		get: function get() {
+			return _standardPageSizes2['default'];
+		}
+	}]);
+
+	return GraphicPrimitive;
+})();
+
+exports['default'] = GraphicPrimitive;
+;
+module.exports = exports['default'];
+
+},{"./standardPageSizes":8}],8:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports["default"] = {
+	A0: [2383.94, 3370.39],
+	A1: [1683.78, 2383.94],
+	A2: [1190.55, 1683.78],
+	A3: [841.89, 1190.55],
+	A4: [595.28, 841.89],
+	A5: [419.53, 595.28],
+	A6: [297.64, 419.53],
+	A7: [209.76, 297.64],
+	A8: [147.40, 209.76],
+	A9: [104.88, 147.40],
+	A10: [73.70, 104.88],
+	B0: [2834.65, 4008.19],
+	B1: [2004.09, 2834.65],
+	B2: [1417.32, 2004.09],
+	B3: [1000.63, 1417.32],
+	B4: [708.66, 1000.63],
+	B5: [498.90, 708.66],
+	B6: [354.33, 498.90],
+	B7: [249.45, 354.33],
+	B8: [175.75, 249.45],
+	B9: [124.72, 175.75],
+	B10: [87.87, 124.72],
+	C0: [2599.37, 3676.54],
+	C1: [1836.85, 2599.37],
+	C2: [1298.27, 1836.85],
+	C3: [918.43, 1298.27],
+	C4: [649.13, 918.43],
+	C5: [459.21, 649.13],
+	C6: [323.15, 459.21],
+	C7: [229.61, 323.15],
+	C8: [161.57, 229.61],
+	C9: [113.39, 161.57],
+	C10: [79.37, 113.39],
+	RA0: [2437.80, 3458.27],
+	RA1: [1729.13, 2437.80],
+	RA2: [1218.90, 1729.13],
+	RA3: [864.57, 1218.90],
+	RA4: [609.45, 864.57],
+	SRA0: [2551.18, 3628.35],
+	SRA1: [1814.17, 2551.18],
+	SRA2: [1275.59, 1814.17],
+	SRA3: [907.09, 1275.59],
+	SRA4: [637.80, 907.09],
+	EXECUTIVE: [521.86, 756.00],
+	FOLIO: [612.00, 936.00],
+	LEGAL: [612.00, 1008.00],
+	LETTER: [612.00, 792.00],
+	TABLOID: [792.00, 1224.00]
+};
+module.exports = exports["default"];
+
+},{}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
@@ -15939,6 +16075,10 @@ var _utilsTransformToPages = require('./utils/transformToPages');
 
 var _utilsTransformToPages2 = _interopRequireDefault(_utilsTransformToPages);
 
+var _utilsGraphicUtil = require('./utils/graphicUtil');
+
+var _utilsGraphicUtil2 = _interopRequireDefault(_utilsGraphicUtil);
+
 var HtmlPagesRenderer = (function (_React$Component) {
   _inherits(HtmlPagesRenderer, _React$Component);
 
@@ -15951,15 +16091,20 @@ var HtmlPagesRenderer = (function (_React$Component) {
   _createClass(HtmlPagesRenderer, [{
     key: 'render',
     value: function render() {
-      var pageOptions = this.props.pageOptions || {};
+      var schema = this.props.schema;
+
+      var defaultPageSizes = _utilsGraphicUtil2['default'].PageSizes[schema.props && schema.props.defaultPageSize || 'A4'];
+      var defaultPageOptions = { height: _utilsGraphicUtil2['default'].pointToPixel(defaultPageSizes[1]), width: _utilsGraphicUtil2['default'].pointToPixel(defaultPageSizes[0]) };
+
+      var pageOptions = this.props.pageOptions || defaultPageOptions;
       var pageHeight = pageOptions.height;
       var pageMargin = pageOptions.margin || {};
       if (pageMargin.top !== undefined) pageHeight -= pageMargin.top;
       if (pageMargin.bottom !== undefined) pageHeight -= pageMargin.bottom;
 
       var pages = this.props.pages;
-      if (pages === undefined) pages = (0, _utilsTransformToPages2['default'])(this.props.schema, pageHeight);
-      var ctx = this.props.schema.props && this.props.schema.props.context || {};
+      if (pages === undefined) pages = (0, _utilsTransformToPages2['default'])(schema, pageHeight);
+      var ctx = schema.props && schema.props.context || {};
       var customStyles = ctx['styles'] || {};
 
       var code = ctx['code'] && ctx['code'].compiled;
@@ -15974,9 +16119,9 @@ var HtmlPagesRenderer = (function (_React$Component) {
       //append shared code to data context
       if (dataContext !== undefined) dataContext.customCode = customCode;
 
-      var pageBackground = this.props.schema.props && this.props.schema.props.background || {};
+      var pageBackground = schema.props && schema.props.background || {};
 
-      var items = this.props.schema.containers.map(function (container, i) {
+      var items = schema.containers.map(function (container, i) {
         var conProps = container.props;
         var conBindings = container.bindings;
         if (conBindings !== undefined && dataContext !== undefined) conProps = _WidgetRenderer2['default'].bindProps(conProps, conBindings, dataContext);
@@ -15996,7 +16141,7 @@ var HtmlPagesRenderer = (function (_React$Component) {
         return _react2['default'].createElement(
           _HtmlPageJs2['default'],
           { key: 'page' + i, position: i, pageNumber: page.pageNumber, widgets: this.props.widgets,
-            background: back, pageOptions: this.props.pageOptions },
+            background: back, pageOptions: pageOptions },
           page.boxes.map(function (node, j) {
             var elName = node.element.elementName;
             var widget = _react2['default'].createElement(_WidgetRenderer2['default'], { key: 'page' + i + '_' + j, widget: this.props.widgets[elName],
@@ -16039,4 +16184,4 @@ exports['default'] = HtmlPagesRenderer;
 ;
 module.exports = exports['default'];
 
-},{"./HtmlPage.js":4,"./WidgetRenderer":5,"./utils/transformToPages":7,"lodash":1,"react":undefined,"react-dom":undefined}]},{},[]);
+},{"./HtmlPage.js":4,"./WidgetRenderer":5,"./utils/graphicUtil":7,"./utils/transformToPages":9,"lodash":1,"react":undefined,"react-dom":undefined}]},{},[]);

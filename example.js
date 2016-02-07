@@ -133,12 +133,12 @@ var HtmlBook = (function (_React$Component) {
 				url: URL + "/docs/" + this.props.params.id,
 				dataType: 'json',
 				success: function success(data) {
-					console.log(data);
+					var schema = JSON.parse(data.schemaTemplate);
 					me.setState({
 						loaded: true,
-						schema: JSON.parse(data.schemaTemplate),
-						data: data.data || {},
-						pageOptions: data.customData.pageOptions || {},
+						schema: schema,
+						data: data.data || schema.props && schema.props.defaultData || {},
+						pageOptions: data.customData && data.customData.pageOptions || {},
 						error: { hasError: false }
 					});
 				},
