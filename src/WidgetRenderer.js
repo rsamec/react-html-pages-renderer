@@ -27,7 +27,7 @@ export default class WidgetRenderer extends React.Component
         //apply property resolution strategy -> default style -> custom style -> local style
 		var customStyle= this.props.customStyle;
 		var widgetStyle = {};
-        if (customStyle !== undefined) widgetStyle = _.merge(widgetStyle,customStyle);
+        if (customStyle !== undefined) widgetStyle = _.merge(widgetStyle,_.cloneDeep(customStyle));
         props = _.merge(widgetStyle,props);
 
         return  React.createElement(widget,props,props.content !== undefined ? React.DOM.div({ dangerouslySetInnerHTML: {__html: props.content } }) : null);
