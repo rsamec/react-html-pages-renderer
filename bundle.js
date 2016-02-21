@@ -15583,7 +15583,7 @@ var WidgetRenderer = (function (_React$Component) {
 			//apply property resolution strategy -> default style -> custom style -> local style
 			var customStyle = this.props.customStyle;
 			var widgetStyle = {};
-			if (customStyle !== undefined) widgetStyle = _lodash2['default'].merge(widgetStyle, customStyle);
+			if (customStyle !== undefined) widgetStyle = _lodash2['default'].merge(widgetStyle, _lodash2['default'].cloneDeep(customStyle));
 			props = _lodash2['default'].merge(widgetStyle, props);
 
 			return _react2['default'].createElement(widget, props, props.content !== undefined ? _react2['default'].DOM.div({ dangerouslySetInnerHTML: { __html: props.content } }) : null);
