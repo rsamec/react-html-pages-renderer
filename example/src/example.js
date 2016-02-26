@@ -10,7 +10,7 @@ import {Menu, MainButton, ChildButton} from 'react-mfb';
 
 const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
 //const SERVICE_URL = "http://localhost:8080";
-
+	
 
 class HtmlBook extends React.Component {
 

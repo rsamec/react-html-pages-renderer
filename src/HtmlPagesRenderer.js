@@ -78,7 +78,7 @@ export default class HtmlPagesRenderer extends React.Component {
     return React.createElement(pagesRoot, {id: "section-to-print", style: this.props.style},double?
           _.chunk(pages, 2).map(function (item, index) {
             return (
-              <div style={{display:'flex'}} key={index}>
+              <div style={{display:'-webkit-flex'}} key={index}>
                 {item.map(function (page) {
                   return createPage(page, counter++)
                 }, this)}
