@@ -5,7 +5,7 @@ import Binder from 'react-binding';
 import HtmlPagesRenderer from 'react-html-pages-renderer';
 import Widgets from './WidgetFactory';
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
-
+import Joyride from 'react-joyride';
 import {Menu, MainButton, ChildButton} from 'react-mfb';
 
 const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
@@ -37,8 +37,10 @@ class HtmlBook extends React.Component {
 					schema: schema,
 					data: data.data || (schema.props && schema.props.defaultData) || {},
 					pageOptions: data.customData && data.customData.pageOptions,
-					error: {hasError: false}
+					error: {hasError: false},
+					steps:schema.props.tour
 				});
+				if (schema.props.tour !== undefined) me.refs.joyride.start(false);
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				me.setState({
@@ -50,10 +52,11 @@ class HtmlBook extends React.Component {
 			}
 		})
 	}
-
+	pinInterest(){
+		var PININTEREST_API_KEY = 'https://assets.pinterest.com/sdk/sdk.js';
+	}
 
 	generate(type) {
-
 		var contentType = 'image/' + type;
 		if (type === "pdf") contentType = 'application/pdf';
 	
@@ -96,26 +99,38 @@ class HtmlBook extends React.Component {
 		var url = this.getUrl();
 		var twitterShare =`http://twitter.com/share?text=${schema.name}&url=${url}&hashtags=photo,album`;
 		console.log(twitterShare);
-		return (<div style={{paddingBottom:10,paddingLeft:10,paddingRight:10}}>
+		return (<div style={{paddingTop:5,paddingBottom:10,paddingLeft:10,paddingRight:10}}>
 			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} doublePage={true}/>
-			<Menu  effect='zoomin' method='hover' position='br'>
+
+			<Joyride ref="joyride" steps={this.state.steps} debug={true}   showSkipButton={true} type="continuous" />
+			<Menu  effect='zoomin' method='hover' position='bl'>
 				<MainButton iconResting="ion-plus-round" iconActive="ion-close-round" />
+				<ChildButton
+					onClick={(e) => { e.preventDefault(); this.generate('jpg') }}
+					icon="ion-images"
+					label="Create image"
+				/>
 				<ChildButton
 					onClick={(e) => { e.preventDefault(); this.generate('pdf') }}
 					icon="ion-printer"
 					label="Generate PDF"
-					/>
+				/>
 				<ChildButton
 					icon="ion-social-twitter"
 					label="Share on Twitter"
 					target="_blank"
 					href={twitterShare} />
-				<ChildButton
-					icon="ion-social-octocat"
-					label="Follow me on Github"
-					target="_new"
-					href="https://github.com/rsamec" />
-			</Menu>
+				{this.state.steps!==undefined?<ChildButton
+					onClick={(e) => { e.preventDefault(); this.refs.joyride.reset(true) }}
+					icon="ion-refresh"
+					label="Restart guide"/>:
+					<ChildButton
+					icon="ion-social-pinterest-outline"
+					label="Share on PinInterest"
+					onClick={(e) => { alert('Sorry, not implemented yet.'); }}
+					 />
+				}
+				</Menu>
 		</div>)
 	}
 }
@@ -127,8 +142,8 @@ class App extends React.Component {
 			</div>
 		);
 	}
-}
-;
+};
+
 class Welcome extends React.Component {
 	constructor(props) {
 		super(props);

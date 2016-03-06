@@ -26,6 +26,7 @@
     "react": "^0.14.0",
     "react-component-gulp-tasks": "^0.7.6",
     "react-dom": "^0.14.0",
+    "react-joyride": "^1.1.1",
     "react-mfb": "^0.3.0",
     "react-photo-widget-factory": "^1.2.0",
     "react-router": "^2.0.0-rc5"
