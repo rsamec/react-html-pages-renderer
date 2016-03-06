@@ -16166,7 +16166,7 @@ var HtmlPagesRenderer = (function (_React$Component) {
       return _react2['default'].createElement(pagesRoot, { id: "section-to-print", style: this.props.style }, double ? _lodash2['default'].chunk(pages, 2).map(function (item, index) {
         return _react2['default'].createElement(
           'div',
-          { style: { display: 'flex' }, key: index },
+          { style: { display: '-webkit-flex' }, key: index },
           item.map(function (page) {
             return createPage(page, counter++);
           }, this)
