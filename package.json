@@ -1,6 +1,6 @@
 {
   "name": "react-html-pages-renderer",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "HtmlPagesRenderer",
   "main": "lib/HtmlPagesRenderer.js",
   "author": "Roman Samec",

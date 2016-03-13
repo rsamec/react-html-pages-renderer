@@ -101,7 +101,7 @@ class HtmlBook extends React.Component {
 		var twitterShare =`http://twitter.com/share?text=${schema.name}&url=${url}&hashtags=photo,album`;
 		console.log(twitterShare);
 		return (<div style={{paddingTop:5,paddingBottom:10,paddingLeft:10,paddingRight:10}}>
-			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} doublePage={true}/>
+			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} doublePage={schema.props && schema.props.doublePage}/>
 
 			<Joyride ref="joyride" steps={this.state.steps} debug={true}   showSkipButton={true} type="continuous" />
 			<Menu  effect='zoomin' method='hover' position='bl'>
