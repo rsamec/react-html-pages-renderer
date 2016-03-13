@@ -10,3 +10,27 @@ body {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+.nestedList ol {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.nestedList ol:not([start]) {
+  counter-reset: item;
+}
+.nestedList ol > li {
+  display: table;
+  counter-increment: item;
+  margin-bottom: 0.6em;
+}
+.nestedList ol > li:before {
+  content: counters(item, ".") ". ";
+  display: table-cell;
+  padding-right: 0.6em;
+}
+.nestedList li ol > li {
+  margin: 0;
+}
+.nestedList li ol > li:before {
+  content: counters(item, ".") " ";
+}
