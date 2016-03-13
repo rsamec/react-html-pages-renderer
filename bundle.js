@@ -15575,7 +15575,7 @@ var WidgetRenderer = (function (_React$Component) {
 				return memo;
 			}, {});
 
-			var defaultProps = _lodash2['default'].merge(bindingProps, box.props);
+			var defaultProps = _lodash2['default'].merge(bindingProps, _lodash2['default'].merge(_lodash2['default'].cloneDeep(widget.defaultProps) || {}, box.props));
 
 			//apply binding
 			var props = this.props.dataBinder !== undefined ? WidgetRenderer.bindProps(defaultProps, box.bindings, this.props.dataBinder, !!this.props.designer) : defaultProps;
