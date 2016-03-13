@@ -32,15 +32,16 @@ class HtmlBook extends React.Component {
 			dataType: 'json',
 			success: function (data) {
 				var schema = JSON.parse(data.schemaTemplate);
+				var data = data.data || (schema.props && schema.props.defaultData) || {};
 				me.setState({
 					loaded: true,
 					schema: schema,
-					data: data.data || (schema.props && schema.props.defaultData) || {},
+					data: data,
 					pageOptions: data.customData && data.customData.pageOptions,
 					error: {hasError: false},
-					steps:schema.props.tour
+					steps:data.tour
 				});
-				if (schema.props.tour !== undefined) me.refs.joyride.start(false);
+				if (data.tour !== undefined) me.refs.joyride.start(false);
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				me.setState({

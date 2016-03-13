@@ -18,7 +18,7 @@ export default class WidgetRenderer extends React.Component
 			return memo;
 		},{});
 
-		var defaultProps = _.merge(bindingProps,box.props);
+		var defaultProps = _.merge(bindingProps,_.merge(_.cloneDeep(widget.defaultProps) || {},box.props));
 
 		//apply binding
 		var props = this.props.dataBinder !== undefined? WidgetRenderer.bindProps(defaultProps,box.bindings,this.props.dataBinder,!!this.props.designer):defaultProps;

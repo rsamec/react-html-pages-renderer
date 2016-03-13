@@ -1,10 +1,13 @@
 import WidgetFactory from 'react-photo-widget-factory';
+import {Bar, Pie, Tree, SmoothLine, StockLine, Scatterplot, Radar} from 'react-pathjs-chart';
 
 export default {
+	"Core.TextContent":WidgetFactory.TextContent,
+	"Core.RichTextContent":WidgetFactory.RichTextContent,
 	"Core.HtmlContent": WidgetFactory.HtmlContent,
+	"Core.JsxContent": WidgetFactory.JsxContent,
 	"Core.ArticleContent": WidgetFactory.ArticleContent,
 	"Core.ListItemContent": WidgetFactory.ListItemContent,
-
 	"Core.ImageBox": WidgetFactory.ImageBox,
 	"Core.SmartImageBox": WidgetFactory.SmartImageBox,
 	"Core.ATvImageBox":WidgetFactory.ATvImageBox,
@@ -18,5 +21,15 @@ export default {
 	"Core.TextBoxInput":WidgetFactory.TextBoxInput,
 	
 	"Core.Icon":WidgetFactory.Icon,
-	"Core.IconMorphTransition":WidgetFactory.IconMorphTransition
+	"Core.IconMorph":WidgetFactory.IconMorph,
+	//deprecated name
+	"Core.IconMorphTransition":WidgetFactory.IconMorph,
+
+	"Chart.Bar":Bar,
+	"Chart.Pie":Pie,
+	"Chart.Tree":Tree,
+	"Chart.SmoothLine":SmoothLine,
+	"Chart.StockLine":StockLine,
+	"Chart.Scatterplot":Scatterplot,
+	"Chart.Radar":Radar,
 };
