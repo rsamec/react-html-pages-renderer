@@ -8,6 +8,7 @@ import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import Joyride from 'react-joyride';
 import {Menu, MainButton, ChildButton} from 'react-mfb';
 
+//const SERVICE_URL = 'http://paperify.io';
 const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
 //const SERVICE_URL = "http://localhost:8080";
 	
@@ -37,7 +38,7 @@ class HtmlBook extends React.Component {
 					loaded: true,
 					schema: schema,
 					data: data,
-					pageOptions: data.customData && data.customData.pageOptions,
+					pageOptions: schema.props.pageOptions, //(data.customData && data.customData.pageOptions) ,
 					error: {hasError: false},
 					steps:data.tour
 				});
@@ -101,7 +102,7 @@ class HtmlBook extends React.Component {
 		var twitterShare =`http://twitter.com/share?text=${schema.name}&url=${url}&hashtags=photo,album`;
 		//console.log(twitterShare);
 		return (<div style={{paddingTop:5,paddingBottom:10,paddingLeft:10,paddingRight:10}}>
-			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} doublePage={schema.props && schema.props.doublePage}/>
+			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />
 
 			<Joyride ref="joyride" steps={this.state.steps} debug={true}   showSkipButton={true} type="continuous" />
 			<Menu  effect='zoomin' method='hover' position='bl'>

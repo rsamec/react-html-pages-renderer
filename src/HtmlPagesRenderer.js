@@ -5,14 +5,12 @@ import _ from 'lodash';
 import HtmlPage from './HtmlPage.js';
 import WidgetRenderer from './WidgetRenderer';
 import transformToPages from './utils/transformToPages';
-import GraphicUtil from './utils/graphicUtil';
 
 export default class HtmlPagesRenderer extends React.Component {
   render() {
 	var schema = this.props.schema;
-
-    var defaultPageSizes = GraphicUtil.PageSizes[schema.props && schema.props.defaultPageSize || 'A4'];
-	var defaultPageOptions = {height: GraphicUtil.pointToPixel(defaultPageSizes[1]), width: GraphicUtil.pointToPixel(defaultPageSizes[0])};
+	  
+	var defaultPageOptions = {width: 794,height:1123};
 	  
 	var pageOptions = this.props.pageOptions || defaultPageOptions;
     var pageHeight = pageOptions.height;
@@ -73,7 +71,7 @@ export default class HtmlPagesRenderer extends React.Component {
     }.bind(this);
 
     var counter = 0;
-    var double = this.props.doublePage || false;
+    var double = pageOptions.doublePage || false;
 
     return React.createElement(pagesRoot, {id: "section-to-print", style: this.props.style},double?
           _.chunk(pages, 2).map(function (item, index) {
