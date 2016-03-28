@@ -8,8 +8,8 @@ import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import Joyride from 'react-joyride';
 import {Menu, MainButton, ChildButton} from 'react-mfb';
 
-//const SERVICE_URL = 'http://paperify.io';
-const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
+const SERVICE_URL = 'http://www.paperify.io/api';
+//const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
 //const SERVICE_URL = "http://localhost:8080";
 	
 
@@ -76,21 +76,16 @@ class HtmlBook extends React.Component {
 				window.open(fileURL);
 			}
 		};
-		//TODO: fix hardcoded pageOptions
-		//var pageOptions = this.state.data && this.state.data.pageOptions;
-		var pageOptions = {
-			height:  841.89,
-			width: 595.28,
-		};
+		
 		//console.log(pageOptions);
 		xmlhttp.send(JSON.stringify(_.extend(this.state.schema, {
-			pageOptions: pageOptions,
+			pageOptions: this.state.pageOptions,
 			data:this.state.data
 		})));
 		//xmlhttp.send(JSON.stringify(this.state.schema));
 	}
 	render() {
-		if (!this.state.loaded) return <div>Loading...</div>;
+		if (!this.state.loaded) return <div>Please, wait. Just loading your document...</div>;
 		if (this.state.error !== undefined && this.state.error.hasError) return <div><h3>
 			Oooops...</h3> {this.state.error.errorMessage}</div>;
 
@@ -193,7 +188,7 @@ class Welcome extends React.Component {
 				<input type="search" onChange={(e)=>{this.load(e.target.value)}}/>
 				<ul>
 					{this.state.items.map(function (item, index) {
-						return <li key={index}><Link to={"/book/" + item._id}>{item.name}</Link></li>
+						return <li key={index}><Link to={"/" + item._id}>{item.name}</Link></li>
 					})}
 				</ul>
 			</div>
@@ -206,7 +201,7 @@ ReactDOM.render((
 	<Router history={hashHistory}>
 		<Route path="/" component={App}>
 			<IndexRoute component={Welcome}/>
-			<Route path="book/:id" component={HtmlBook}/>
+			<Route path="/:id" component={HtmlBook}/>
 		</Route>
 	</Router>
 ), document.getElementById('app'));
