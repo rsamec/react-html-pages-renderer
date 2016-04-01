@@ -33,7 +33,7 @@ function transformToPages(clonedSchema,pageHeight){
     const REPEATER_CONTAINER_NAME = "Repeater";
     const BOXES_COLLECTION_NAME = "boxes";
     const DEFAULT_PAGE_HEIGHT = 1065;
-
+	
 
     //step -> transform relative positions to absolute positions
 	if (pageHeight === undefined) pageHeight = DEFAULT_PAGE_HEIGHT;

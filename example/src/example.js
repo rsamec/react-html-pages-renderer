@@ -7,6 +7,7 @@ import Widgets from './WidgetFactory';
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import Joyride from 'react-joyride';
 import {Menu, MainButton, ChildButton} from 'react-mfb';
+import Loader from 'react-loader';
 
 const SERVICE_URL = 'http://www.paperify.io/api';
 //const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
@@ -85,7 +86,7 @@ class HtmlBook extends React.Component {
 		//xmlhttp.send(JSON.stringify(this.state.schema));
 	}
 	render() {
-		if (!this.state.loaded) return <div>Please, wait. Just loading your document...</div>;
+		if (!this.state.loaded) return <Loader loaded={this.state.loaded}><div>Please, wait. Just loading your document...</div></Loader>;
 		if (this.state.error !== undefined && this.state.error.hasError) return <div><h3>
 			Oooops...</h3> {this.state.error.errorMessage}</div>;
 
@@ -150,7 +151,7 @@ class Welcome extends React.Component {
 	}
 	load(searchText){
 		var me = this;
-		var url = SERVICE_URL + "/docs/?limit=15";
+		var url = SERVICE_URL + "/docs/?limit=50";
 		if (!!searchText) url +="&name__regex=/^" + searchText + "/i";
 		console.log(url);
 		$.ajax({
@@ -180,17 +181,21 @@ class Welcome extends React.Component {
 	}
 
 	render() {
+		
+		var flexItemStyle = {backgroundColor:'lavender',margin:5, padding:10}
 		if (!this.state.loaded) return <div>Loading...</div>;
 		if (this.state.error !== undefined && this.state.error.hasError) return <div><h3>
 			Oooops...</h3> {this.state.error.errorMessage}</div>;
 		return (
 			<div>
-				<input type="search" onChange={(e)=>{this.load(e.target.value)}}/>
-				<ul>
+				<div style={{width:'100%'}}>
+					<input style={{fontSize:35}} type="search" onChange={(e)=>{this.load(e.target.value)}}/>
+				</div>
+				<div style={{display:'flex',flexWrap:'wrap'}}>
 					{this.state.items.map(function (item, index) {
-						return <li key={index}><Link to={"/" + item._id}>{item.name}</Link></li>
+						return <div  key={index} style={flexItemStyle}><Link to={"/" + item._id}>{item.name}</Link></div>
 					})}
-				</ul>
+				</div>
 			</div>
 		);
 	}

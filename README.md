@@ -45,8 +45,7 @@ var HtmlPagesRenderer = require('react-html-pages-renderer');
 +	widgets - the list of widgets used for rendering
 +	schema - document to print - [PTT](https://github.com/rsamec/ptt) format
 +	data - data used to data bind values to schemas
-+	pageOptions - height and width of the page , margin of the page
-+	doublePage - it renders sequence of double pages, otherwise it renders single page sequence
++	pageOptions - height and width of the page , margin of the page, doublePage - sequence of double pages, otherwise it renders single page sequence
 
 
 ### Notes

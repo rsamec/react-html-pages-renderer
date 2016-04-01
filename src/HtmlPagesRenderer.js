@@ -5,10 +5,12 @@ import _ from 'lodash';
 import HtmlPage from './HtmlPage.js';
 import WidgetRenderer from './WidgetRenderer';
 import transformToPages from './utils/transformToPages';
+import bindToSchema from './utils/bindToSchema';
 
 export default class HtmlPagesRenderer extends React.Component {
   render() {
 	var schema = this.props.schema;
+	var dataContext = this.props.dataContext;
 	  
 	var defaultPageOptions = {width: 794,height:1123};
 	  
@@ -19,7 +21,7 @@ export default class HtmlPagesRenderer extends React.Component {
     if (pageMargin.bottom !== undefined) pageHeight -= pageMargin.bottom;
 
     var pages = this.props.pages;
-    if (pages === undefined) pages = transformToPages(schema, pageHeight);
+    if (pages === undefined) pages =  transformToPages(bindToSchema(schema,dataContext), pageHeight);
     var ctx = (schema.props && schema.props.context) || {};
     var customStyles = ctx['styles'] || {};
 
@@ -30,7 +32,7 @@ export default class HtmlPagesRenderer extends React.Component {
 	//console.log(code);
     var customCode = !!code ? new Function(code)() : undefined;
 
-    var dataContext = this.props.dataContext;
+    
 
     //append shared code to data context
     if (dataContext !== undefined) dataContext.customCode = customCode;

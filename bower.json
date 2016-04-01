@@ -1,6 +1,6 @@
 {
   "name": "react-html-pages-renderer",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "HtmlPagesRenderer",
   "main": "dist/react-html-pages-renderer.min.js",
   "homepage": "https://github.com/rsamec/react-html-pages-renderer",
