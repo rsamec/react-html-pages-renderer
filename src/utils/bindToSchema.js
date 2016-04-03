@@ -17,26 +17,6 @@ function bindToSchema(clonedSchema,dataBinder){
 	const VISIBILITY_KEY = "visibility";
 	const ITEMS_KEY = "binding";
 
-	//var specialClone = function(current, containers){ return _.extend(_.cloneDeep(_.omit(current,['containers','boxes'])),{containers:containers, boxes:current.boxes})}
-	////first clone schema so that
-	//// deep clone for containers
-	//// shallow clone for boxes
-	//function iterate(current) {
-	//    var children = current.containers;
-	//
-	//    //stop condition
-	//    if (children === undefined || children.length === 0){
-	//        return specialClone(current,[]);
-	//    };
-	//
-	//    //iterate through containers
-	//    var containers = [];
-	//    for (var i = 0, len = children.length; i < len; i++) {
-	//        containers.push(iterate(children[i]));
-	//    }
-	//    return specialClone(current,containers);
-	//}
-
 	var getValue = _.curry(getBindingValue)(dataBinder);
 	
 	//step -> set section visibility (containers)
@@ -59,28 +39,11 @@ function bindToSchema(clonedSchema,dataBinder){
 		if (!!x && x.elementName === REPEATER_CONTAINER_NAME) {
 			//var itemsProp = x.props && x.props[ITEMS_KEY];
 			var itemsBinding = x.bindings && x.bindings[ITEMS_KEY];
-			
-			//var rangeFromPath = !!binding && !!binding.path && getArrayRange(binding.path);
-			//if (rangeFromPath === undefined) {
-			//	var dataObj = !!binding && !!binding.path && getValue(binding.path);
-			//	var itemsLength = (!!dataObj && dataObj.length) || 0;
-			//	rangeFromPath = {from:0, to:itemsLength}
-			//}
-
+	
 			if (itemsBinding !== undefined){
 				x.props[ITEMS_KEY] = !!itemsBinding.path?getValue(itemsBinding.path):undefined;
 			}
-
-			//var itemsLength = (x.props[ITEMS_KEY] && x.props[ITEMS_KEY].length) || 0;
-			//
-			//traverse(x.props).forEach(function (y) {
-			//	//TODO: simple solution for demonstration purposes
-			//	if (this.key === "binding") {
-			//		//y.length =itemsLength;
-			//		y.range = {from:0, to:itemsLength};
-			//	}
-			//});
-		}
+	}
 	});
 	//TODO: each step means its own recursion - optimize by doing all steps using one recursion
 	
@@ -122,18 +85,40 @@ function bindToSchema(clonedSchema,dataBinder){
 					var clonedRow = _.cloneDeep(x);
 					clonedRow.elementName = CONTAINER_NAME;
 					clonedRow.props[ITEMS_KEY] = undefined;
+					
 					//apply binding using square brackets notation
-					//traverse(clonedRow).forEach(function (y) {
-					//	//TODO: simple solution for demonstration purposes
-					//	if (this.key === "path") {
-					//		var lastIndex = binding.path.lastIndexOf('[');
-                    //
-					//		var arrayPath = lastIndex!==-1?binding.path.substr(0,lastIndex):binding.path;
-					//		var rowExpression = arrayPath + "[" + i + "]." + y;
-                    //
-					//		this.update(rowExpression);
-					//	}
-					//});
+					traverse(clonedRow).forEach(function (y) {
+						//TODO: simple solution for demonstration purposes
+						if (this.key === "bindings") {
+							var props = this.parent.node.props;
+							var bindings = y;
+							_.each(bindings,function(bindingProps,key) {
+
+								//binding with converter
+								var converter;
+								if (!!bindingProps.converter && !!bindingProps.converter.compiled) {
+									converter = eval(bindingProps.converter.compiled);
+
+									if (typeof converter === 'string' || converter instanceof String){
+										var	sharedConverter = dataBinder.customCode && dataBinder.customCode[converter];
+										if (sharedConverter !== undefined) converter = sharedConverter;
+									}
+								}
+								var wrapper = {state:{data:itemsProp[i]}};
+								var binding = Binder.bindToState(wrapper,'data', bindingProps.path, converter, bindingProps.converterArgs);
+								
+								
+								//simple binding without converter using lodash
+								//var newValue = binding.value;
+								//var newValue = _.get(itemsProp[i],binding.path);
+
+								//console.log(key,binding.path + " -> " +  newValue)
+								props[key] = binding.value;
+							});
+
+							this.update(undefined);
+						}
+					});
 
 					clonedRows.push(clonedRow);
 				}
