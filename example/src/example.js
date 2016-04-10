@@ -2,12 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom';
 import Binder from 'react-binding';
 
-import HtmlPagesRenderer from 'react-html-pages-renderer';
+import HtmlPagesRenderer,{HtmlRenderer} from 'react-html-pages-renderer';
 import Widgets from './WidgetFactory';
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import Joyride from 'react-joyride';
 import {Menu, MainButton, ChildButton} from 'react-mfb';
 import Loader from 'react-loader';
+import SwipeViews from 'react-swipe-views';
 
 const SERVICE_URL = 'http://www.paperify.io/api';
 //const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
@@ -97,11 +98,11 @@ class HtmlBook extends React.Component {
 		var url = this.getUrl();
 		var twitterShare =`http://twitter.com/share?text=${schema.name}&url=${url}&hashtags=photo,album`;
 		//console.log(twitterShare);
-		return (<div style={{paddingTop:5,paddingBottom:10,paddingLeft:10,paddingRight:10}}>
+		return (<div>
 			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />
 
-			<Joyride ref="joyride" steps={this.state.steps} debug={true}   showSkipButton={true} type="continuous" />
-			<Menu  effect='zoomin' method='hover' position='bl'>
+			<Joyride className="hidden-print" ref="joyride" steps={this.state.steps} debug={true}   showSkipButton={true} type="continuous" />
+			<Menu className="hidden-print" effect='zoomin' method='hover' position='bl'>
 				<MainButton iconResting="ion-plus-round" iconActive="ion-close-round" />
 				<ChildButton
 					onClick={(e) => { e.preventDefault(); this.generate('jpg') }}
@@ -130,6 +131,58 @@ class HtmlBook extends React.Component {
 				}
 				</Menu>
 		</div>)
+	}
+}
+class SwipeView extends React.Component{
+	constructor(props) {
+		super(props);
+		this.state = {
+			loaded: false
+		};
+	}
+	getUrl(){
+		return SERVICE_URL + "/docs/" + this.props.params.id;
+	}
+	componentDidMount() {
+		var url = this.getUrl();
+		var me = this;
+		$.ajax({
+			type: "GET",
+			url:url,
+			dataType: 'json',
+			success: function (data) {
+				var schema = JSON.parse(data.schemaTemplate);
+				var data = data.data || (schema.props && schema.props.defaultData) || {};
+				me.setState({
+					loaded: true,
+					schema: schema,
+					data: data,
+					pageOptions: schema.props.pageOptions, //(data.customData && data.customData.pageOptions) ,
+					error: {hasError: false},
+					steps:data.tour
+				});
+				if (data.tour !== undefined) me.refs.joyride.start(false);
+			},
+			error: function (xhr, ajaxOptions, thrownError) {
+				me.setState({
+					loaded: true,
+					error: {
+						hasError: true, errorMessage: xhr.responseText
+					}
+				});
+			}
+		})
+	}
+	render(){
+		if (!this.state.loaded) return <Loader loaded={this.state.loaded}><div>Please, wait. Just loading your document...</div></Loader>;
+		if (this.state.error !== undefined && this.state.error.hasError) return <div><h3>
+			Oooops...</h3> {this.state.error.errorMessage}</div>;
+
+
+		var schema = this.state.schema;
+		var dataContext = Binder.bindToState(this, 'data');
+
+		return <HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />
 	}
 }
 class App extends React.Component {
@@ -200,6 +253,9 @@ class Welcome extends React.Component {
 		);
 	}
 };
+
+
+
 
 ReactDOM.render((
 	// Render the main component into the dom

@@ -1,7 +1,16 @@
 import WidgetFactory from 'react-photo-widget-factory';
 import {Bar, Pie, Tree, SmoothLine, StockLine, Scatterplot, Radar} from 'react-pathjs-chart';
 
+import BackgroundContainer from './containers/BackgroundContainer';
+import Grid from './containers/GridWrapper';
+import Cell from './containers/CellWrapper';
+
 export default {
+
+	"BackgroundContainer":BackgroundContainer,
+	"Grid":Grid,
+	"Cell":Cell,
+
 	"Core.TextContent":WidgetFactory.TextContent,
 	"Core.RichTextContent":WidgetFactory.RichTextContent,
 	"Core.HtmlContent": WidgetFactory.HtmlContent,

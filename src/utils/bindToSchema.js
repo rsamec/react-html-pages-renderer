@@ -7,7 +7,16 @@ var getBindingValue = (dataBinder,path)=> {
 	var binding = Binder.bindTo(dataBinder, path);
 	return binding.value;
 }
-
+var trav = function(container,fce,depth){
+	if (depth === undefined) depth =0;
+	var containers = container.containers || [];
+	fce(container,depth);
+	depth++;
+	for (var i=0;i!== containers.length;i++) {
+		trav(containers[i],fce,depth);
+	}
+	
+}
 function bindToSchema(clonedSchema,dataBinder){
 
 	const CONTAINER_NAME = "Container";
@@ -19,10 +28,12 @@ function bindToSchema(clonedSchema,dataBinder){
 
 	var getValue = _.curry(getBindingValue)(dataBinder);
 	
+	
+	
 	//step -> set section visibility (containers)
-	traverse(clonedSchema).forEach(function (x) {
-
-		if (!!x && x.elementName === CONTAINER_NAME) {
+	trav(clonedSchema,function (x) {
+		
+		//if (!!x && x.elementName === CONTAINER_NAME) {
 					
 			//var visibilityProp = x.props && x.props[VISIBILITY_KEY];
 			var visibilityBinding = x.bindings && x.bindings[VISIBILITY_KEY];
@@ -31,26 +42,28 @@ function bindToSchema(clonedSchema,dataBinder){
 				x.props[VISIBILITY_KEY] = !!visibilityBinding.path?getValue(visibilityBinding.path):undefined;					
 			}
 			
-		}
+		//}
 	});
 
 	//step -> set repeatable sections (containers) -
-	traverse(clonedSchema).forEach(function (x) {
-		if (!!x && x.elementName === REPEATER_CONTAINER_NAME) {
+	trav(clonedSchema,function (x) {
+		if (x.elementName === REPEATER_CONTAINER_NAME) {
 			//var itemsProp = x.props && x.props[ITEMS_KEY];
 			var itemsBinding = x.bindings && x.bindings[ITEMS_KEY];
-	
-			if (itemsBinding !== undefined){
-				x.props[ITEMS_KEY] = !!itemsBinding.path?getValue(itemsBinding.path):undefined;
+
+			if (itemsBinding !== undefined) {
+				x.props[ITEMS_KEY] = !!itemsBinding.path ? getValue(itemsBinding.path) : undefined;
 			}
-	}
+		}
 	});
+	
+	
 	//TODO: each step means its own recursion - optimize by doing all steps using one recursion
 	
 	//step -> remove invisible sections (containers)
 	traverse(clonedSchema).forEach(function (x) {
 
-		if (!!x && x.elementName === CONTAINER_NAME) {
+		if (!!x && (x.elementName === CONTAINER_NAME || x.elementName === "Grid" || x.elementName === "Cell")) {
 			var visibilityProp = x.props && x.props[VISIBILITY_KEY];
 			if (visibilityProp === false){
 
@@ -72,6 +85,9 @@ function bindToSchema(clonedSchema,dataBinder){
 		}
 	});
 
+	
+	
+	
 	//step -> process repeatable sections (containers) - for each row - deep clone row template
 	traverse(clonedSchema).forEach(function (x) {
 		if (!!x && x.elementName === REPEATER_CONTAINER_NAME){
@@ -124,12 +140,26 @@ function bindToSchema(clonedSchema,dataBinder){
 				}
 
 				//assign all cloned rows to parent section
-				x.containers = clonedRows;
-				x.boxes = [];
-
+				this.parent.parent.node.containers = clonedRows;
+				this.parent.parent.node.boxes = [];
 			}
 		}
 	});
+
+	
+	
+	
+	
+	
+	
+	
+	
+	trav(clonedSchema,(x,d)=>{console.log("       ".slice(-d) + x.elementName + "(" + x.name + ")")})
+
+
+
+
+
 	return clonedSchema;
 }
 

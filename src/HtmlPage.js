@@ -45,11 +45,10 @@ export default class HtmlPage extends React.Component
             paddingRight: margins[1],
             paddingBottom: margins[2],
             paddingLeft: margins[3],
-            border: (options && options.border) || 'gray 1px solid',
-            backgroundColor: '#ffffff',
         };
-        //console.log("InnerStyle: " + JSON.stringify(pageInnerStyle,null,2));
-        //console.log("PageStyle: " +  JSON.stringify(pageStyle,null,2));
+		
+        console.log("InnerStyle: " + JSON.stringify(pageInnerStyle,null,2));
+        console.log("PageStyle: " +  JSON.stringify(pageStyle,null,2));
 
       var bgStyle = _.clone(pageStyle);
       var bg = this.props.background;
@@ -70,9 +69,9 @@ export default class HtmlPage extends React.Component
         return (
             <div id={'PAGE_' + this.props.pageNumber} className={this.props.className} style={this.props.style}>
               {/*<div style={{position:'absolute',width:pageStyle.width,height:pageStyle.height}}><img src={bg.image} style={imgStyle}></img></div>*/}
-                <div style={bgStyle} />
-                <div style={pageStyle}>
-                    <div style={pageInnerStyle}>
+                <div style={bgStyle} className="pageStyle" />
+                <div style={pageStyle} className="pageStyle">
+                    <div  style={pageInnerStyle}>
                         {this.props.children}
                     </div>
                 </div>
