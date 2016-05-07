@@ -105,9 +105,10 @@ function transformToPages(clonedSchema,pageHeight){
             var parent = this.parent.node;
             for (var i in x){
                 var el = x[i];
+				var elStyle = el.style || {};
 			
-				var elTop = el.style.top && parseInt(el.style.top,10) || 0;
-				var elLeft = el.style.left && parseInt(el.style.left,10) || 0;
+				var elTop = elStyle.top && parseInt(elStyle.top,10) || 0;
+				var elLeft = elStyle.left && parseInt(elStyle.left,10) || 0;
 
 				var parentStyle = parent.style || {};
                 //grab parent positions
@@ -118,8 +119,8 @@ function transformToPages(clonedSchema,pageHeight){
                 //TODO: !!!! temporarily - container width simulates boxes width
                 var height = (parentStyle.height && parseInt(parentStyle.height, 10) || 0) - elTop;
                 var width = (parentStyle.width && parseInt(parentStyle.width, 10) || 0) - elLeft;
-                //var height = parseInt(el.style.height,10);
-                //var width = parseInt(el.style.width,10);
+                //var height = parseInt(elStyle.height,10);
+                //var width = parseInt(elStyle.width,10);
                 if (isNaN(height)) height = 0;
                 if (isNaN(width)) width = 0;
 
@@ -135,17 +136,18 @@ function transformToPages(clonedSchema,pageHeight){
                 if (pages.length > 1){ top -= (pages.length -1) * pageHeight };
 
                 var style = {'left':left,'top':top,'position':'absolute'};
-                if (el.style.width!== undefined) style.width = el.style.width;
-                if (el.style.height!== undefined) style.height = el.style.height;
-                if (el.style.zIndex!== undefined) style.zIndex = el.style.zIndex;
+                if (elStyle.width!== undefined) style.width = elStyle.width;
+                if (elStyle.height!== undefined) style.height = elStyle.height;
+                if (elStyle.zIndex!== undefined) style.zIndex = elStyle.zIndex;
 
-                //propagate width and height to widget props
-                if (!el.props.width && !!el.style.width) el.props.width = el.style.width;
-                if (!el.props.height&& !!el.style.height) el.props.height = el.style.height;
+                //TODO: propagate width and height to widget props
+				var elProps = el.props || {};
+                if (!elProps.width && !!elStyle.width) elProps.width = elStyle.width;
+                if (!elProps.height&& !!elStyle.height) elProps.height = elStyle.height;
 
-                if (el.style.transform !== undefined) {
-                    style.WebkitTransform = generateCssTransform(el.style.transform);
-                    style.transform = generateCssTransform(el.style.transform);
+                if (elStyle.transform !== undefined) {
+                    style.WebkitTransform = generateCssTransform(elStyle.transform);
+                    style.transform = generateCssTransform(elStyle.transform);
                 }
                 // set another box
                 currentPage.boxes.push({element:x[i],style:style});
