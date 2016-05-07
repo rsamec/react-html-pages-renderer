@@ -3,7 +3,7 @@ import backgroundStyle from './utils/backgroundStyle';
 import styleBorder from'./utils/border'
 
 let BackgroundContainer = (props) => {
-	if (props.child) {
+	//if (props.child) {
 		var styles = {
 			width: props.width,
 			height: props.height,
@@ -20,7 +20,7 @@ let BackgroundContainer = (props) => {
 
 		//border
 		if (props.border !== undefined) styleBorder(styles, props.border);
-	}
+	//}
 	return <div><div style={styles}></div><div {...props}>{props.children}</div></div>
 }
 

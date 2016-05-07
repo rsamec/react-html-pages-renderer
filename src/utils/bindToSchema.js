@@ -146,19 +146,7 @@ function bindToSchema(clonedSchema,dataBinder){
 		}
 	});
 
-	
-	
-	
-	
-	
-	
-	
-	
-	trav(clonedSchema,(x,d)=>{console.log("       ".slice(-d) + x.elementName + "(" + x.name + ")")})
-
-
-
-
+	//trav(clonedSchema,(x,d)=>{console.log("       ".slice(-d) + x.elementName + "(" + x.name + ")")})
 
 	return clonedSchema;
 }

@@ -206,13 +206,13 @@ class Welcome extends React.Component {
 		var me = this;
 		var url = SERVICE_URL + "/docs/?limit=50";
 		if (!!searchText) url +="&name__regex=/^" + searchText + "/i";
-		console.log(url);
+		//console.log(url);
 		$.ajax({
 			type: "GET",
 			url: url,
 			dataType: 'json',
 			success: function (data) {
-				console.log(data);
+				//console.log(data);
 				me.setState({
 					loaded: true,
 					items: data,

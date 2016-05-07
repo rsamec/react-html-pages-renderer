@@ -7,10 +7,7 @@ import generateCssTransform from './generateCssTransform';
  * This reduce object schema tree to flat boxes group by pages.
  * The transformation has these steps
  * -    transform relative positions to absolute positions (top, left)
- * -    removes all content in hidden containers
- * -    expands repeatable container (using repeater binding)
  * -    group to pages
- * -    apply one-way data binding
  *
  * @param {object} schema - object schema tree
  * @param {object} data - data context used for data binding
@@ -18,9 +15,9 @@ import generateCssTransform from './generateCssTransform';
  */
 function transformToPages(clonedSchema,pageHeight){
 
-    const CONTAINER_NAME = "Container";
-    const REPEATER_CONTAINER_NAME = "Repeater";
+	const BACKGROUND_CONTAINER_NAME = "BackgroundContainer";
     const BOXES_COLLECTION_NAME = "boxes";
+	const CONTAINERS_COLLECTION_NAME = "containers";
     const DEFAULT_PAGE_HEIGHT = 1065;
 	
 
@@ -68,39 +65,59 @@ function transformToPages(clonedSchema,pageHeight){
 
         //expand container height if childrenHeight is greater than node height - typically for repeated containers
         computedHeight = _.max([nodeHeight,childrenHeight]) +  nodeTop;
-        //var tmp =  node.style!==undefined?node.style.top:'--';
-        //console.log(node.name + ":" + height + "->" + top + ", " + tmp);
 
         //compute next top
         globalTop += (computedHeight-childrenHeight);
-        //return computed height of container
+        
+		//return computed height of container
         return computedHeight;
     };
     trav(clonedSchema);
 
 
-    //step -> reduce to boxes - using containers absolute positions (top,height) and its dimensions (with, height)
+	traverse(clonedSchema).reduce(function (occ,x) {
+
+		if (this.key === CONTAINERS_COLLECTION_NAME) {
+			for (var i in x) {
+				var el = x[i];
+
+				if (el.elementName === BACKGROUND_CONTAINER_NAME) {
+					var newBox = _.cloneDeep(el);
+					newBox.style.top = 0;
+					newBox.style.left = 0;
+					newBox.containers = [];
+					newBox.boxes = [];
+					el.boxes.push(newBox);
+				}
+			}
+		}
+	});
+	
+
+	//step -> reduce to boxes - using containers absolute positions (top,height) and its dimensions (with, height)
     //step -> create pages and add boxes to them
     var pages = [];
     var currentPage;
     traverse(clonedSchema).reduce(function (occ,x) {
 
+		
         if (this.key === BOXES_COLLECTION_NAME){
             var parent = this.parent.node;
             for (var i in x){
                 var el = x[i];
-
+			
 				var elTop = el.style.top && parseInt(el.style.top,10) || 0;
 				var elLeft = el.style.left && parseInt(el.style.left,10) || 0;
 
+				var parentStyle = parent.style || {};
                 //grab parent positions
-                var top = (parent.style.top && parseInt(parent.style.top,10) || 0) + elTop;
-                var left = (parent.style.left && parseInt(parent.style.left,10) || 0) + elLeft;
+                var top = (parentStyle.top && parseInt(parentStyle.top,10) || 0) + elTop;
+                var left = (parentStyle.left && parseInt(parentStyle.left,10) || 0) + elLeft;
 
                 //grab parent dimensions
                 //TODO: !!!! temporarily - container width simulates boxes width
-                var height = (parent.style.height && parseInt(parent.style.height, 10) || 0) - elTop;
-                var width = (parent.style.width && parseInt(parent.style.width, 10) || 0) - elLeft;
+                var height = (parentStyle.height && parseInt(parentStyle.height, 10) || 0) - elTop;
+                var width = (parentStyle.width && parseInt(parentStyle.width, 10) || 0) - elLeft;
                 //var height = parseInt(el.style.height,10);
                 //var width = parseInt(el.style.width,10);
                 if (isNaN(height)) height = 0;
@@ -136,22 +153,6 @@ function transformToPages(clonedSchema,pageHeight){
         }
         return occ;
     }, pages);
-
-
-    //step -> apply one-way binding
-    //_.each(pages,function(page){
-    //    _.each(page.boxes,function(node) {
-    //        var box = node.element;
-    //        for (var propName in box){
-    //            var prop = box[propName];
-    //            //TODO: better test - it is a binding object?
-    //            if (_.isObject(prop) && !!prop.Path && prop.Mode !== 'TwoWay'){
-    //                //one-way binding
-    //                box[propName] = dataBinder.getValue(prop.Path);
-    //            }
-    //        }
-    //    })
-    //});
 
     return pages;
 };

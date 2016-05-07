@@ -37,15 +37,14 @@ export default class HtmlPagesRenderer extends React.Component {
 
 		var containerRenderer = <ContainerRenderer elementName={bindSchema.elementName}
 				containers={bindSchema.containers}
-				containerProps={bindSchema.props}
+				node={bindSchema}
 				boxes={bindSchema.boxes}
 				dataBinder={dataContext}
 				ctx={ctx}
 				widgets={widgets}
 				widgetRenderer={WidgetRenderer}
 			/>
-		
-		
+				
 		return React.createElement(pagesRoot, {className:'printable', id: "section-to-print", style: this.props.style}, containerRenderer);
 	}
 };

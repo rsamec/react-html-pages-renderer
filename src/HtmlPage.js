@@ -47,8 +47,8 @@ export default class HtmlPage extends React.Component
             paddingLeft: margins[3],
         };
 		
-        console.log("InnerStyle: " + JSON.stringify(pageInnerStyle,null,2));
-        console.log("PageStyle: " +  JSON.stringify(pageStyle,null,2));
+        //console.log("InnerStyle: " + JSON.stringify(pageInnerStyle,null,2));
+        //console.log("PageStyle: " +  JSON.stringify(pageStyle,null,2));
 
       var bgStyle = _.clone(pageStyle);
       var bg = this.props.background;
