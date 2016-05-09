@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import generateCssTransform from './utils/generateCssTransform';
 
-export default (props) => {
+let ContainerRenderer = (props) => {
 
 	var containers = props.containers || [];
 	var boxes = props.boxes || [];
@@ -114,4 +114,5 @@ export default (props) => {
 
 	</div>)
 }	
+export default ContainerRenderer;
 
