@@ -12,7 +12,7 @@ let CellWrapper = (props) => {
 	var parentProps = props.parentProps || {};
 	
 	if (parentProps.border !== undefined) styleBorder(styles,parentProps.border);
-
+ 	
 	//padding
 	if (parentProps.padding !== undefined){
 		var size = parentProps.padding || {};
@@ -25,7 +25,9 @@ let CellWrapper = (props) => {
 	var selfProps = props;
 	
 	//styles.width = "100%";
-	
+
+	if (selfProps.hAlign !== undefined) styles["textAlign"] = selfProps.hAlign;
+
 	//apply custom background
 	if (selfProps.background !== undefined) {
 		styles = _.extend(styles, backgroundStyle(selfProps.background, {

@@ -3,8 +3,9 @@ import _ from 'lodash';
 import Binder from 'react-binding';
 
 var getArrayRange = ()=>{return undefined}
-var getBindingValue = (dataBinder,path)=> {
-	var binding = Binder.bindTo(dataBinder, path);
+var getBindingValue = (dataBinder,bindingProps)=> {
+	var converter =(!!bindingProps.converter && !!bindingProps.converter.compiled)? eval(bindingProps.converter.compiled):undefined;
+	var binding = Binder.bindTo(dataBinder, bindingProps.path,converter,bindingProps.converterArgs);
 	return binding.value;
 }
 var trav = function(container,fce,depth){
@@ -39,7 +40,7 @@ function bindToSchema(clonedSchema,dataBinder){
 			var visibilityBinding = x.bindings && x.bindings[VISIBILITY_KEY];
 			
 			if (visibilityBinding !== undefined){
-				x.props[VISIBILITY_KEY] = !!visibilityBinding.path?getValue(visibilityBinding.path):undefined;					
+				x.props[VISIBILITY_KEY] = !!visibilityBinding.path?getValue(visibilityBinding):undefined;					
 			}
 			
 		//}
@@ -52,7 +53,7 @@ function bindToSchema(clonedSchema,dataBinder){
 			var itemsBinding = x.bindings && x.bindings[ITEMS_KEY];
 
 			if (itemsBinding !== undefined) {
-				x.props[ITEMS_KEY] = !!itemsBinding.path ? getValue(itemsBinding.path) : undefined;
+				x.props[ITEMS_KEY] = !!itemsBinding.path ? getValue(itemsBinding) : undefined;
 			}
 		}
 	});
@@ -140,8 +141,12 @@ function bindToSchema(clonedSchema,dataBinder){
 				}
 
 				//assign all cloned rows to parent section
-				this.parent.parent.node.containers = clonedRows;
-				this.parent.parent.node.boxes = [];
+				var parentNode = this.parent.parent.node;
+				var repeaterIndex = parentNode.containers.indexOf(this.node);
+				var args = [repeaterIndex,1].concat(clonedRows);
+				if (repeaterIndex !==-1) Array.prototype.splice.apply(parentNode.containers,args);
+				
+				//this.parent.parent.node.boxes = [];
 			}
 		}
 	});

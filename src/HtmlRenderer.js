@@ -1,4 +1,4 @@
-import React from 'react';
+var React = require('react');
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
@@ -6,9 +6,10 @@ import WidgetRenderer from './WidgetRenderer';
 import bindToSchema from './utils/bindToSchema';
 import ContainerRenderer from './ContainerRenderer.js';
 
-export default class HtmlPagesRenderer extends React.Component {
+export default class HtmlRenderer extends React.Component {
+	
 	render() {
-		var schema = this.props.schema;
+		var schema = _.cloneDeep(this.props.schema);
 		var dataContext = this.props.dataContext;
 		var widgets = this.props.widgets;
 		
@@ -21,15 +22,12 @@ export default class HtmlPagesRenderer extends React.Component {
 		var customStyles = ctx['styles'] || {};
 
 		var code = ctx['code'] && ctx['code'].compiled;
-		//TODO: hacky way how to compile
-		if (code !== undefined) code = code.substr(code.indexOf('return')).replace('})();', '');
-
-		//console.log(code);
-		var customCode = !!code ? new Function(code)() : undefined;
-
-
+		if (!!code && this.customCode === undefined) {
+			this.customCode = eval(code);
+		}
 		//append shared code to data context
-		if (dataContext !== undefined) dataContext.customCode = customCode;
+		if (dataContext !== undefined) dataContext.customCode = this.customCode;
+
 
 		var pageBackground = (schema.props && schema.props.background) || {};
 		

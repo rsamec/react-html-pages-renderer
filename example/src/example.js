@@ -8,14 +8,21 @@ import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import Joyride from 'react-joyride';
 import {Menu, MainButton, ChildButton} from 'react-mfb';
 import Loader from 'react-loader';
-import SwipeViews from 'react-swipe-views';
+//import SwipeViews from 'react-swipe-views';
+import SwipeViews from 'react-swipe';
+import Helmet from "react-helmet";
+
+//var Frame = require('react-frame-component');
 
 const SERVICE_URL = 'http://www.paperify.io/api';
 //const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
 //const SERVICE_URL = "http://localhost:8080";
-	
 
 class HtmlBook extends React.Component {
+	render(){return <HtmlView {...this.props} type="book" />}
+}
+
+class HtmlView extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -98,8 +105,19 @@ class HtmlBook extends React.Component {
 		var url = this.getUrl();
 		var twitterShare =`http://twitter.com/share?text=${schema.name}&url=${url}&hashtags=photo,album`;
 		//console.log(twitterShare);
+		var meta = [
+			{"name": "description", "content": "Paperify application"},
+			{"property": "og:type", "content": "article"}
+		];
+
+		var isResponsive = schema.containers[0] && schema.containers[0].elementName === "Grid";
+		if (isResponsive) meta.push({"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"});
+		
 		return (<div>
-			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />
+			<Helmet title={schema.name}  meta={meta} />
+			{this.props.type === "book"?
+			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />:
+			<HtmlRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />}
 
 			<Joyride className="hidden-print" ref="joyride" steps={this.state.steps} debug={true}   showSkipButton={true} type="continuous" />
 			<Menu className="hidden-print" effect='zoomin' method='hover' position='bl'>
@@ -182,7 +200,9 @@ class SwipeView extends React.Component{
 		var schema = this.state.schema;
 		var dataContext = Binder.bindToState(this, 'data');
 
-		return <HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />
+		//var swipeViews = <SwipeViews swipeOptions={{continuous: false}}/>;
+		//return  <Frame initialContent="<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width'><link type='text/css' rel='stylesheet' href='example.css' /></head><body><div style='width:100%;height:100%;'></div></body></html>"><HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} /></Frame>
+		return <HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} /> 
 	}
 }
 class App extends React.Component {
@@ -262,7 +282,9 @@ ReactDOM.render((
 	<Router history={hashHistory}>
 		<Route path="/" component={App}>
 			<IndexRoute component={Welcome}/>
-			<Route path="/:id" component={HtmlBook}/>
+			<Route path="/:id" component={HtmlView}/>
+			<Route path="/swipe/:id" component={SwipeView}/>
+			<Route path="/book/:id" component={HtmlBook}/>
 		</Route>
 	</Router>
 ), document.getElementById('app'));

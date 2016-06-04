@@ -26,7 +26,7 @@ let ContainerRenderer = (props) => {
 
 	//apply custom styles
 	var customStyle = ctx["styles"] && ctx["styles"][elementName];
-	if (customStyle !== undefined) nodeProps = _.merge(_.cloneDeep(customStyle), nodeProps)
+	if (customStyle !== undefined) nodeProps = _.merge(_.cloneDeep(customStyle), nodeProps);
 
 	//apply node props
 	if (dataBinder !== undefined)nodeProps = props.widgetRenderer.bindProps(_.cloneDeep(nodeProps), nodeBindings.bindings, dataBinder, true);
@@ -56,8 +56,11 @@ let ContainerRenderer = (props) => {
 			var childComponent = widgets[container.elementName] || 'div';
 
 			//propagete width and height to child container props
-			if (!childProps.width && !!container.style.width) childProps.width = container.style.width;
-			if (!childProps.height && !!container.style.height) childProps.height = container.style.height;
+			var containerStyle = container.style || {};
+			if (!childProps.width && !!containerStyle.width) childProps.width = containerStyle.width;
+			if (!childProps.height && !!containerStyle.height) childProps.height = containerStyle.height;
+			if (!childProps.left && !!containerStyle.left) childProps.left = containerStyle.left;
+			if (!childProps.top && !!containerStyle.top) childProps.top = containerStyle.top;
 
 
 			return (React.createElement(childComponent, _.extend({child: true, key: key}, childProps),
@@ -84,15 +87,16 @@ let ContainerRenderer = (props) => {
 			var key = box.name + index;
 
 			//propagate width and height to widget props
-			if (!box.props.width && !!box.style.width) box.props.width = box.style.width;
-			if (!box.props.height && !!box.style.height) box.props.height = box.style.height;
+			var boxProps = box.props || {};
+			var boxStyle = box.style || {};
+			if (!boxProps.width && !!boxStyle.width) boxProps.width = boxStyle.width;
+			if (!boxProps.height && !!boxStyle.height) boxProps.height = boxStyle.height;
 
-			if (box.style.transform !== undefined) {
-				box.style.WebkitTransform = generateCssTransform(box.style.transform);
-				box.style.transform = generateCssTransform(box.style.transform);
+			if (boxStyle.transform !== undefined) {
+				boxStyle.WebkitTransform = generateCssTransform(boxStyle.transform);
+				boxStyle.transform = generateCssTransform(boxStyle.transform);
 			}
-
-			box.style.position = elementName === "Cell" ? 'relative' : 'absolute';
+			boxStyle.position = elementName === "Cell" ? 'relative' : 'absolute';
 
 			var elName = box.elementName;
 			var widget = React.createElement(props.widgetRenderer, {
@@ -103,7 +107,7 @@ let ContainerRenderer = (props) => {
 			}, null);
 
 			return (
-				<div key={key} style={box.style}>
+				<div key={key} style={boxStyle}>
 					<div id={box.name}>{widget}</div>
 				</div>
 			);

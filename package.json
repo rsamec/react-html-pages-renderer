@@ -1,6 +1,6 @@
 {
   "name": "react-html-pages-renderer",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "HtmlPagesRenderer",
   "main": "lib/HtmlPagesRenderer.js",
   "author": "Roman Samec",
@@ -23,17 +23,20 @@
     "eslint": "^1.6.0",
     "eslint-plugin-react": "^3.5.1",
     "gulp": "^3.9.0",
-    "react": "^0.14.0",
+    "react": "^0.14.8",
     "react-component-gulp-tasks": "^0.7.6",
     "react-dom": "^0.14.0",
+    "react-flexr": "^2.1.0-beta",
+    "react-helmet": "^3.1.0",
+    "react-input-range": "^0.8.0",
     "react-joyride": "^1.1.1",
     "react-loader": "^2.2.0",
     "react-mfb": "^0.3.0",
     "react-pathjs-chart": "^0.3.4",
     "react-photo-widget-factory": "^1.2.2",
     "react-router": "^2.0.0-rc5",
-    "react-swipe-views": "0.0.11",
-    "react-flexr": "^2.1.0-beta"
+    "react-swipe": "^5.0.3",
+    "swipe-js-iso": "^2.0.3"
   },
   "peerDependencies": {
     "react": "^0.14.0"

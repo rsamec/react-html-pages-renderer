@@ -17,10 +17,28 @@ function transformToPages(clonedSchema,pageHeight){
 
 	const BACKGROUND_CONTAINER_NAME = "BackgroundContainer";
     const BOXES_COLLECTION_NAME = "boxes";
-	const CONTAINERS_COLLECTION_NAME = "containers";
+	const CONTAINERS_COLLECTION_NAME = "containers";	
     const DEFAULT_PAGE_HEIGHT = 1065;
 	
 
+	traverse(clonedSchema).reduce(function (occ,x) {
+
+		if (this.key === CONTAINERS_COLLECTION_NAME) {
+			for (var i in x) {
+				var el = x[i];
+
+				if (el.elementName === BACKGROUND_CONTAINER_NAME) {
+					if (this.level > 1 || (el.boxes.length ===0 && el.containers.length === 0)) {
+						var newBox = _.cloneDeep(el);
+						newBox.containers = [];
+						newBox.boxes = [];
+						el.boxes.unshift(newBox);
+					}
+				}
+			}
+		}
+	});
+	
     //step -> transform relative positions to absolute positions
 	if (pageHeight === undefined) pageHeight = DEFAULT_PAGE_HEIGHT;
     var globalTop = 0;
@@ -73,26 +91,6 @@ function transformToPages(clonedSchema,pageHeight){
         return computedHeight;
     };
     trav(clonedSchema);
-
-
-	traverse(clonedSchema).reduce(function (occ,x) {
-
-		if (this.key === CONTAINERS_COLLECTION_NAME) {
-			for (var i in x) {
-				var el = x[i];
-
-				if (el.elementName === BACKGROUND_CONTAINER_NAME) {
-					var newBox = _.cloneDeep(el);
-					newBox.style.top = 0;
-					newBox.style.left = 0;
-					newBox.containers = [];
-					newBox.boxes = [];
-					el.boxes.push(newBox);
-				}
-			}
-		}
-	});
-	
 
 	//step -> reduce to boxes - using containers absolute positions (top,height) and its dimensions (with, height)
     //step -> create pages and add boxes to them

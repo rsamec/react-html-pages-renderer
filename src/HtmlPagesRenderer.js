@@ -1,4 +1,4 @@
-import React from 'react';
+var React = require('react');
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
@@ -11,7 +11,7 @@ import HtmlRenderer from './HtmlRenderer';
 
 export default class HtmlPagesRenderer extends React.Component {
 	render() {
-		var schema = this.props.schema;
+		var schema = _.cloneDeep(this.props.schema);
 		var dataContext = this.props.dataContext;
 		var widgets = this.props.widgets;
 		
@@ -34,15 +34,11 @@ export default class HtmlPagesRenderer extends React.Component {
 		var customStyles = ctx['styles'] || {};
 
 		var code = ctx['code'] && ctx['code'].compiled;
-		//TODO: hacky way how to compile
-		if (code !== undefined) code = code.substr(code.indexOf('return')).replace('})();', '');
-
-		//console.log(code);
-		var customCode = !!code ? new Function(code)() : undefined;
-
-
+		if (!!code && this.customCode === undefined) {
+			this.customCode = eval(code);
+		}
 		//append shared code to data context
-		if (dataContext !== undefined) dataContext.customCode = customCode;
+		if (dataContext !== undefined) dataContext.customCode = this.customCode;
 
 		var pageBackground = (schema.props && schema.props.background) || {};
 
@@ -103,10 +99,10 @@ export default class HtmlPagesRenderer extends React.Component {
 		var counter = 0;
 		var double = pageOptions.doublePage || false;
 
-		return React.createElement(pagesRoot, {className:'printable', id: "section-to-print", style: this.props.style}, double ?
+		return React.createElement(pagesRoot, {className:'printable', id: "section-to-print", style: this.props.style, swipeOptions:{continuous: true}, key:pages.length}, double ?
 			 _.chunk(pages, 2).map(function (item, index) {
 					return (
-						<div key={'page' + index} title={'Page ' + index}>
+						<div key={'page' + index} title={index}>
 						<div className="doublePageStyle" key={index}>
 							{item.map(function (page) {
 								return createPage(page, counter++)

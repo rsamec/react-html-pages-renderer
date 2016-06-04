@@ -7,7 +7,9 @@ let BackgroundContainer = (props) => {
 		var styles = {
 			width: props.width,
 			height: props.height,
-			position:'absolute'
+			top:props.top,
+			left:props.left,
+			position: props.position || 'absolute'
 		};
 
 		//apply custom background

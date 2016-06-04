@@ -22,7 +22,7 @@ export default class WidgetRenderer extends React.Component
 
 		//apply binding
 		var props = this.props.dataBinder !== undefined? WidgetRenderer.bindProps(defaultProps,box.bindings,this.props.dataBinder,!!this.props.designer):defaultProps;
-
+		if (this.props.dataBinder!== undefined) {props.customCode = this.props.dataBinder.customCode}
 
         //apply property resolution strategy -> default style -> custom style -> local style
 		var customStyle= this.props.customStyle;

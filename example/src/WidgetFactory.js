@@ -4,6 +4,11 @@ import {Bar, Pie, Tree, SmoothLine, StockLine, Scatterplot, Radar} from 'react-p
 import BackgroundContainer from './containers/BackgroundContainer';
 import Grid from './containers/GridWrapper';
 import Cell from './containers/CellWrapper';
+import InputRange from './widgets/InputRange';
+
+
+
+
 
 export default {
 
@@ -41,4 +46,6 @@ export default {
 	"Chart.StockLine":StockLine,
 	"Chart.Scatterplot":Scatterplot,
 	"Chart.Radar":Radar,
+
+	'react-input-range.InputRange':InputRange,
 };
