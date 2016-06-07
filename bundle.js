@@ -15401,6 +15401,146 @@ var hasOwnProperty = Object.hasOwnProperty || function (obj, key) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _utilsGenerateCssTransform = require('./utils/generateCssTransform');
+
+var _utilsGenerateCssTransform2 = _interopRequireDefault(_utilsGenerateCssTransform);
+
+var ContainerRenderer = function ContainerRenderer(props) {
+
+	var containers = props.containers || [];
+	var boxes = props.boxes || [];
+
+	var dataBinder = props.dataBinder;
+	var ctx = props.ctx;
+	var node = props.node;
+	var widgets = props.widgets;
+
+	var elementName = node.elementName;
+
+	var customStyles = ctx["styles"] || {};
+
+	var styles = {
+		left: props.left,
+		top: props.top,
+		height: props.height,
+		width: props.width,
+		position: props.position || 'relative'
+	};
+
+	var nodeProps = node.props;
+	var nodeBindings = node.bindings || {};
+
+	//apply custom styles
+	var customStyle = ctx["styles"] && ctx["styles"][elementName];
+	if (customStyle !== undefined) nodeProps = _lodash2['default'].merge(_lodash2['default'].cloneDeep(customStyle), nodeProps);
+
+	//apply node props
+	if (dataBinder !== undefined) nodeProps = props.widgetRenderer.bindProps(_lodash2['default'].cloneDeep(nodeProps), nodeBindings.bindings, dataBinder, true);
+
+	var containerComponent = widgets[elementName] || 'div';
+
+	return _react2['default'].createElement(
+		'div',
+		{ style: styles },
+		containers.length !== 0 ? _react2['default'].createElement(containerComponent, nodeProps, containers.map(function (container, index) {
+
+			var key = container.name + index;
+
+			var left = container.style.left === undefined ? 0 : parseInt(container.style.left, 10);
+			var top = container.style.top === undefined ? 0 : parseInt(container.style.top, 10);
+
+			//je potreba merge
+			var childProps = _lodash2['default'].cloneDeep(container.props) || {};
+			var childBindings = container.bindings || {};
+
+			//apply custom styles
+			var childCustomStyle = ctx["styles"] && ctx["styles"][container.elementName];
+			if (childCustomStyle !== undefined) childProps = _lodash2['default'].merge(_lodash2['default'].cloneDeep(childCustomStyle), childProps);
+
+			//apply node props
+			if (dataBinder !== undefined) childProps = props.widgetRenderer.bindProps(childProps, childBindings.bindings, dataBinder, true);
+
+			var childComponent = widgets[container.elementName] || 'div';
+
+			//propagete width and height to child container props
+			var containerStyle = container.style || {};
+			if (!childProps.width && !!containerStyle.width) childProps.width = containerStyle.width;
+			if (!childProps.height && !!containerStyle.height) childProps.height = containerStyle.height;
+			if (!childProps.left && !!containerStyle.left) childProps.left = containerStyle.left;
+			if (!childProps.top && !!containerStyle.top) childProps.top = containerStyle.top;
+
+			return _react2['default'].createElement(childComponent, _lodash2['default'].extend({ child: true, key: key }, childProps), _react2['default'].createElement(ContainerRenderer, { key: key,
+				index: index,
+				left: left,
+				top: top,
+				height: container.style.height,
+				width: container.style.width,
+				position: container.style.position || 'relative',
+				boxes: container.boxes,
+				containers: container.containers,
+				node: container,
+				parent: props.parent,
+				dataBinder: props.dataBinder,
+				ctx: props.ctx,
+				widgets: props.widgets,
+				widgetRenderer: props.widgetRenderer }));
+		}, undefined)) : null,
+		boxes.map(function (box, index) {
+
+			var key = box.name + index;
+
+			//propagate width and height to widget props
+			var boxProps = box.props || {};
+			var boxStyle = box.style || {};
+			if (!boxProps.width && !!boxStyle.width) boxProps.width = boxStyle.width;
+			if (!boxProps.height && !!boxStyle.height) boxProps.height = boxStyle.height;
+
+			if (boxStyle.transform !== undefined) {
+				boxStyle.WebkitTransform = (0, _utilsGenerateCssTransform2['default'])(boxStyle.transform);
+				boxStyle.transform = (0, _utilsGenerateCssTransform2['default'])(boxStyle.transform);
+			}
+			boxStyle.position = elementName === "Cell" ? 'relative' : 'absolute';
+
+			var elName = box.elementName;
+			var widget = _react2['default'].createElement(props.widgetRenderer, {
+				widget: props.widgets[elName],
+				node: box,
+				customStyle: customStyles[elName],
+				dataBinder: dataBinder
+			}, null);
+
+			return _react2['default'].createElement(
+				'div',
+				{ key: key, style: boxStyle },
+				_react2['default'].createElement(
+					'div',
+					{ id: box.name },
+					widget
+				)
+			);
+		}, undefined)
+	);
+};
+exports['default'] = ContainerRenderer;
+module.exports = exports['default'];
+
+},{"./utils/generateCssTransform":10,"lodash":1,"react":undefined}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
     value: true
 });
 
@@ -15476,10 +15616,9 @@ var HtmlPage = (function (_React$Component) {
                 paddingTop: margins[0],
                 paddingRight: margins[1],
                 paddingBottom: margins[2],
-                paddingLeft: margins[3],
-                border: options && options.border || 'gray 1px solid',
-                backgroundColor: '#ffffff'
+                paddingLeft: margins[3]
             };
+
             //console.log("InnerStyle: " + JSON.stringify(pageInnerStyle,null,2));
             //console.log("PageStyle: " +  JSON.stringify(pageStyle,null,2));
 
@@ -15500,10 +15639,10 @@ var HtmlPage = (function (_React$Component) {
             return _react2['default'].createElement(
                 'div',
                 { id: 'PAGE_' + this.props.pageNumber, className: this.props.className, style: this.props.style },
-                _react2['default'].createElement('div', { style: bgStyle }),
+                _react2['default'].createElement('div', { style: bgStyle, className: 'pageStyle' }),
                 _react2['default'].createElement(
                     'div',
-                    { style: pageStyle },
+                    { style: pageStyle, className: 'pageStyle' },
                     _react2['default'].createElement(
                         'div',
                         { style: pageInnerStyle },
@@ -15522,7 +15661,101 @@ exports['default'] = HtmlPage;
 module.exports = exports['default'];
 /*<div style={{position:'absolute',width:pageStyle.width,height:pageStyle.height}}><img src={bg.image} style={imgStyle}></img></div>*/
 
-},{"./utils/backgroundStyle":6,"lodash":1,"react":undefined}],5:[function(require,module,exports){
+},{"./utils/backgroundStyle":8,"lodash":1,"react":undefined}],6:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var _reactDom = require('react-dom');
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _WidgetRenderer = require('./WidgetRenderer');
+
+var _WidgetRenderer2 = _interopRequireDefault(_WidgetRenderer);
+
+var _utilsBindToSchema = require('./utils/bindToSchema');
+
+var _utilsBindToSchema2 = _interopRequireDefault(_utilsBindToSchema);
+
+var _ContainerRendererJs = require('./ContainerRenderer.js');
+
+var _ContainerRendererJs2 = _interopRequireDefault(_ContainerRendererJs);
+
+var React = require('react');
+
+var HtmlRenderer = (function (_React$Component) {
+	_inherits(HtmlRenderer, _React$Component);
+
+	function HtmlRenderer() {
+		_classCallCheck(this, HtmlRenderer);
+
+		_get(Object.getPrototypeOf(HtmlRenderer.prototype), 'constructor', this).apply(this, arguments);
+	}
+
+	_createClass(HtmlRenderer, [{
+		key: 'render',
+		value: function render() {
+			var schema = _lodash2['default'].cloneDeep(this.props.schema);
+			var dataContext = this.props.dataContext;
+			var widgets = this.props.widgets;
+
+			var bindSchema = (0, _utilsBindToSchema2['default'])(schema, dataContext);
+
+			var isGrid = schema.containers[0] && schema.containers[0].elementName === "Grid";
+
+			var ctx = schema.props && schema.props.context || {};
+			var customStyles = ctx['styles'] || {};
+
+			var code = ctx['code'] && ctx['code'].compiled;
+			if (!!code && this.customCode === undefined) {
+				this.customCode = eval(code);
+			}
+			//append shared code to data context
+			if (dataContext !== undefined) dataContext.customCode = this.customCode;
+
+			var pageBackground = schema.props && schema.props.background || {};
+
+			var pagesRoot = this.props.pagesRoot || 'div';
+
+			var containerRenderer = React.createElement(_ContainerRendererJs2['default'], { elementName: bindSchema.elementName,
+				containers: bindSchema.containers,
+				node: bindSchema,
+				boxes: bindSchema.boxes,
+				dataBinder: dataContext,
+				ctx: ctx,
+				widgets: widgets,
+				widgetRenderer: _WidgetRenderer2['default']
+			});
+
+			return React.createElement(pagesRoot, { className: 'printable', id: "section-to-print", style: this.props.style }, containerRenderer);
+		}
+	}]);
+
+	return HtmlRenderer;
+})(React.Component);
+
+exports['default'] = HtmlRenderer;
+;
+module.exports = exports['default'];
+
+},{"./ContainerRenderer.js":4,"./WidgetRenderer":7,"./utils/bindToSchema":9,"lodash":1,"react":undefined,"react-dom":undefined}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -15579,6 +15812,9 @@ var WidgetRenderer = (function (_React$Component) {
 
 			//apply binding
 			var props = this.props.dataBinder !== undefined ? WidgetRenderer.bindProps(defaultProps, box.bindings, this.props.dataBinder, !!this.props.designer) : defaultProps;
+			if (this.props.dataBinder !== undefined) {
+				props.customCode = this.props.dataBinder.customCode;
+			}
 
 			//apply property resolution strategy -> default style -> custom style -> local style
 			var customStyle = this.props.customStyle;
@@ -15641,7 +15877,7 @@ WidgetRenderer.bindProps = function (clonedProps, bindings, dataBinder, isDesign
 };
 module.exports = exports['default'];
 
-},{"lodash":1,"react":undefined,"react-binding":2}],6:[function(require,module,exports){
+},{"lodash":1,"react":undefined,"react-binding":2}],8:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -15718,11 +15954,11 @@ exports["default"] = function (source, panelSize) {
 
 module.exports = exports["default"];
 
-},{"lodash":1}],7:[function(require,module,exports){
+},{"lodash":1}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-    value: true
+	value: true
 });
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -15735,174 +15971,363 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _reactBinding = require('react-binding');
+
+var _reactBinding2 = _interopRequireDefault(_reactBinding);
+
+var getArrayRange = function getArrayRange() {
+	return undefined;
+};
+var getBindingValue = function getBindingValue(dataBinder, bindingProps) {
+	var converter = !!bindingProps.converter && !!bindingProps.converter.compiled ? eval(bindingProps.converter.compiled) : undefined;
+	var binding = _reactBinding2['default'].bindTo(dataBinder, bindingProps.path, converter, bindingProps.converterArgs);
+	return binding.value;
+};
+var trav = function trav(container, fce, depth) {
+	if (depth === undefined) depth = 0;
+	var containers = container.containers || [];
+	fce(container, depth);
+	depth++;
+	for (var i = 0; i !== containers.length; i++) {
+		trav(containers[i], fce, depth);
+	}
+};
+function bindToSchema(clonedSchema, dataBinder) {
+
+	var CONTAINER_NAME = "Container";
+	var REPEATER_CONTAINER_NAME = "Repeater";
+	var BOXES_COLLECTION_NAME = "boxes";
+
+	var VISIBILITY_KEY = "visibility";
+	var ITEMS_KEY = "binding";
+
+	var getValue = _lodash2['default'].curry(getBindingValue)(dataBinder);
+
+	//step -> set section visibility (containers)
+	trav(clonedSchema, function (x) {
+
+		//if (!!x && x.elementName === CONTAINER_NAME) {
+
+		//var visibilityProp = x.props && x.props[VISIBILITY_KEY];
+		var visibilityBinding = x.bindings && x.bindings[VISIBILITY_KEY];
+
+		if (visibilityBinding !== undefined) {
+			x.props[VISIBILITY_KEY] = !!visibilityBinding.path ? getValue(visibilityBinding) : undefined;
+		}
+
+		//}
+	});
+
+	//step -> set repeatable sections (containers) -
+	trav(clonedSchema, function (x) {
+		if (x.elementName === REPEATER_CONTAINER_NAME) {
+			//var itemsProp = x.props && x.props[ITEMS_KEY];
+			var itemsBinding = x.bindings && x.bindings[ITEMS_KEY];
+
+			if (itemsBinding !== undefined) {
+				x.props[ITEMS_KEY] = !!itemsBinding.path ? getValue(itemsBinding) : undefined;
+			}
+		}
+	});
+
+	//TODO: each step means its own recursion - optimize by doing all steps using one recursion
+
+	//step -> remove invisible sections (containers)
+	(0, _traverse2['default'])(clonedSchema).forEach(function (x) {
+
+		if (!!x && (x.elementName === CONTAINER_NAME || x.elementName === "Grid" || x.elementName === "Cell")) {
+			var visibilityProp = x.props && x.props[VISIBILITY_KEY];
+			if (visibilityProp === false) {
+
+				//get parent
+				var parent = this.parent;
+				if (parent !== undefined) parent = parent.parent;
+				if (parent !== undefined) parent = parent.node;
+
+				//decrese the height of the parent container
+				if (parent !== undefined && parent.style !== undefined) {
+					var parentHeight = parseInt(parent.style.height, 10);
+					var nodeHeight = parseInt(x.style.height, 10);
+					if (!isNaN(nodeHeight) && !isNaN(parentHeight)) parent.style.height = parentHeight - nodeHeight;
+				}
+
+				//invisible section -> delete
+				this.remove();
+			}
+		}
+	});
+
+	//step -> process repeatable sections (containers) - for each row - deep clone row template
+	(0, _traverse2['default'])(clonedSchema).forEach(function (x) {
+		if (!!x && x.elementName === REPEATER_CONTAINER_NAME) {
+			var itemsProp = x.props && x.props[ITEMS_KEY];
+			if (_lodash2['default'].isArray(itemsProp)) {
+				//for each row - deep clone row template
+				var clonedRows = [];
+				var range = { from: 0, to: itemsProp.length };
+				for (var i = range.from; i != range.to; i++) {
+
+					var clonedRow = _lodash2['default'].cloneDeep(x);
+					clonedRow.elementName = CONTAINER_NAME;
+					clonedRow.props[ITEMS_KEY] = undefined;
+
+					//apply binding using square brackets notation
+					(0, _traverse2['default'])(clonedRow).forEach(function (y) {
+						//TODO: simple solution for demonstration purposes
+						if (this.key === "bindings") {
+							var props = this.parent.node.props;
+							var bindings = y;
+							_lodash2['default'].each(bindings, function (bindingProps, key) {
+
+								//binding with converter
+								var converter;
+								if (!!bindingProps.converter && !!bindingProps.converter.compiled) {
+									converter = eval(bindingProps.converter.compiled);
+
+									if (typeof converter === 'string' || converter instanceof String) {
+										var sharedConverter = dataBinder.customCode && dataBinder.customCode[converter];
+										if (sharedConverter !== undefined) converter = sharedConverter;
+									}
+								}
+								var wrapper = { state: { data: itemsProp[i] } };
+								var binding = _reactBinding2['default'].bindToState(wrapper, 'data', bindingProps.path, converter, bindingProps.converterArgs);
+
+								//simple binding without converter using lodash
+								//var newValue = binding.value;
+								//var newValue = _.get(itemsProp[i],binding.path);
+
+								//console.log(key,binding.path + " -> " +  newValue)
+								props[key] = binding.value;
+							});
+
+							this.update(undefined);
+						}
+					});
+
+					clonedRows.push(clonedRow);
+				}
+
+				//assign all cloned rows to parent section
+				var parentNode = this.parent.parent.node;
+				var repeaterIndex = parentNode.containers.indexOf(this.node);
+				var args = [repeaterIndex, 1].concat(clonedRows);
+				if (repeaterIndex !== -1) Array.prototype.splice.apply(parentNode.containers, args);
+
+				//this.parent.parent.node.boxes = [];
+			}
+		}
+	});
+
+	//trav(clonedSchema,(x,d)=>{console.log("       ".slice(-d) + x.elementName + "(" + x.name + ")")})
+
+	return clonedSchema;
+}
+
+exports['default'] = bindToSchema;
+module.exports = exports['default'];
+
+},{"lodash":1,"react-binding":2,"traverse":3}],10:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+	value: true
+});
+
+exports['default'] = function (transform) {
+	var cssTransform = '';
+
+	if (transform.tx !== undefined) cssTransform += ' translateX(' + transform.tx + 'px)';
+	if (transform.ty !== undefined) cssTransform += ' translateY(' + transform.ty + 'px)';
+	if (transform.rz !== undefined) cssTransform += ' rotate(' + transform.rz + 'rad)';
+	if (transform.sx !== undefined) cssTransform += ' scaleX(' + transform.sx + ')';
+	if (transform.sy !== undefined) cssTransform += ' scaleY(' + transform.sy + ')';
+
+	return cssTransform;
+};
+
+;
+module.exports = exports['default'];
+
+},{}],11:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _traverse = require('traverse');
+
+var _traverse2 = _interopRequireDefault(_traverse);
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _generateCssTransform = require('./generateCssTransform');
+
+var _generateCssTransform2 = _interopRequireDefault(_generateCssTransform);
+
 /**
  * This reduce containers objects (containers, repeaters) to boxes group by pages.
  * This reduce object schema tree to flat boxes group by pages.
  * The transformation has these steps
  * -    transform relative positions to absolute positions (top, left)
- * -    removes all content in hidden containers
- * -    expands repeatable container (using repeater binding)
  * -    group to pages
- * -    apply one-way data binding
  *
  * @param {object} schema - object schema tree
  * @param {object} data - data context used for data binding
  * @returns {object} schema to render -> pages with boxes with data-binded values
  */
-var generateCssTransform = function generateCssTransform(transform) {
-    var cssTransform = '';
-
-    if (transform.tx !== undefined) cssTransform += ' translateX(' + transform.tx + 'px)';
-    if (transform.ty !== undefined) cssTransform += ' translateY(' + transform.ty + 'px)';
-    if (transform.rz !== undefined) cssTransform += ' rotate(' + transform.rz + 'rad)';
-    if (transform.sx !== undefined) cssTransform += ' scaleX(' + transform.sx + ')';
-    if (transform.sy !== undefined) cssTransform += ' scaleY(' + transform.sy + ')';
-
-    return cssTransform;
-};
 function transformToPages(clonedSchema, pageHeight) {
 
-    var CONTAINER_NAME = "Container";
-    var REPEATER_CONTAINER_NAME = "Repeater";
-    var BOXES_COLLECTION_NAME = "boxes";
-    var DEFAULT_PAGE_HEIGHT = 1065;
+  var BACKGROUND_CONTAINER_NAME = "BackgroundContainer";
+  var BOXES_COLLECTION_NAME = "boxes";
+  var CONTAINERS_COLLECTION_NAME = "containers";
+  var DEFAULT_PAGE_HEIGHT = 1065;
 
-    //step -> transform relative positions to absolute positions
-    if (pageHeight === undefined) pageHeight = DEFAULT_PAGE_HEIGHT;
-    var globalTop = 0;
-    var trav = function trav(node) {
+  (0, _traverse2['default'])(clonedSchema).reduce(function (occ, x) {
 
-        if (node === undefined) return 0;
+    if (this.key === CONTAINERS_COLLECTION_NAME) {
+      for (var i in x) {
+        var el = x[i];
 
-        var props = node.props || {};
+        if (el.elementName === BACKGROUND_CONTAINER_NAME) {
+          if (this.level > 1 || el.boxes.length === 0 && el.containers.length === 0) {
+            var newBox = _lodash2['default'].cloneDeep(el);
+            newBox.containers = [];
+            newBox.boxes = [];
+            el.boxes.unshift(newBox);
+          }
+        }
+      }
+    }
+  });
 
-        //grap height and top properties
-        var nodeHeight = node.style === undefined ? 0 : parseInt(node.style.height, 10);
-        if (isNaN(nodeHeight)) nodeHeight = 0;
-        var nodeTop = node.style === undefined ? 0 : parseInt(node.style.top, 10);
-        if (isNaN(nodeTop)) nodeTop = 0;
+  //step -> transform relative positions to absolute positions
+  if (pageHeight === undefined) pageHeight = DEFAULT_PAGE_HEIGHT;
+  var globalTop = 0;
+  var trav = function trav(node) {
 
-        var children = node.containers || [];
-        var computedHeight = 0;
-        if (children === undefined) return computedHeight;
-        var childrenHeight = 0;
+    if (node === undefined) return 0;
 
-        //unbreakable -> if section is too height to have enough place to fit the the page - move it to the next page
-        var startOnNewPage = false;
-        if (!!props.unbreakable) {
-            var nodeBottom = globalTop + nodeHeight;
-            var nextPageTop = Math.ceil(globalTop / pageHeight) * pageHeight;
-            startOnNewPage = nodeBottom > nextPageTop;
+    var props = node.props || {};
+
+    //grap height and top properties
+    var nodeHeight = node.style === undefined ? 0 : parseInt(node.style.height, 10);
+    if (isNaN(nodeHeight)) nodeHeight = 0;
+    var nodeTop = node.style === undefined ? 0 : parseInt(node.style.top, 10);
+    if (isNaN(nodeTop)) nodeTop = 0;
+
+    var children = node.containers || [];
+    var computedHeight = 0;
+    if (children === undefined) return computedHeight;
+    var childrenHeight = 0;
+
+    //unbreakable -> if section is too height to have enough place to fit the the page - move it to the next page
+    var startOnNewPage = false;
+    if (!!props.unbreakable) {
+      var nodeBottom = globalTop + nodeHeight;
+      var nextPageTop = Math.ceil(globalTop / pageHeight) * pageHeight;
+      startOnNewPage = nodeBottom > nextPageTop;
+    }
+
+    //startOnNewPage - move globalTop to the next page
+    if (!!props.startOnNewPage || startOnNewPage) globalTop = Math.ceil(globalTop / pageHeight) * pageHeight;
+
+    //set absolute top property - use last global top + node top (container can have top != 0)
+    if (node.style !== undefined) node.style.top = globalTop + nodeTop;
+
+    //recurse by all its children containers
+    for (var i in children) {
+      childrenHeight += trav(children[i]);
+    }
+
+    //expand container height if childrenHeight is greater than node height - typically for repeated containers
+    computedHeight = _lodash2['default'].max([nodeHeight, childrenHeight]) + nodeTop;
+
+    //compute next top
+    globalTop += computedHeight - childrenHeight;
+
+    //return computed height of container
+    return computedHeight;
+  };
+  trav(clonedSchema);
+
+  //step -> reduce to boxes - using containers absolute positions (top,height) and its dimensions (with, height)
+  //step -> create pages and add boxes to them
+  var pages = [];
+  var currentPage;
+  (0, _traverse2['default'])(clonedSchema).reduce(function (occ, x) {
+
+    if (this.key === BOXES_COLLECTION_NAME) {
+      var parent = this.parent.node;
+      for (var i in x) {
+        var el = x[i];
+        var elStyle = el.style || {};
+
+        var elTop = elStyle.top && parseInt(elStyle.top, 10) || 0;
+        var elLeft = elStyle.left && parseInt(elStyle.left, 10) || 0;
+
+        var parentStyle = parent.style || {};
+        //grab parent positions
+        var top = (parentStyle.top && parseInt(parentStyle.top, 10) || 0) + elTop;
+        var left = (parentStyle.left && parseInt(parentStyle.left, 10) || 0) + elLeft;
+
+        //grab parent dimensions
+        //TODO: !!!! temporarily - container width simulates boxes width
+        var height = (parentStyle.height && parseInt(parentStyle.height, 10) || 0) - elTop;
+        var width = (parentStyle.width && parseInt(parentStyle.width, 10) || 0) - elLeft;
+        //var height = parseInt(elStyle.height,10);
+        //var width = parseInt(elStyle.width,10);
+        if (isNaN(height)) height = 0;
+        if (isNaN(width)) width = 0;
+
+        //create newPage
+        if (currentPage === undefined || top + height > pageHeight * pages.length) {
+          var newPage = { pageNumber: pages.length + 1, boxes: [] };
+          pages.push(newPage);
+          currentPage = newPage;
         }
 
-        //startOnNewPage - move globalTop to the next page
-        if (!!props.startOnNewPage || startOnNewPage) globalTop = Math.ceil(globalTop / pageHeight) * pageHeight;
+        //decrease top according the pages
+        if (pages.length > 1) {
+          top -= (pages.length - 1) * pageHeight;
+        };
 
-        //set absolute top property - use last global top + node top (container can have top != 0)
-        if (node.style !== undefined) node.style.top = globalTop + nodeTop;
+        var style = { 'left': left, 'top': top, 'position': 'absolute' };
+        if (elStyle.width !== undefined) style.width = elStyle.width;
+        if (elStyle.height !== undefined) style.height = elStyle.height;
+        if (elStyle.zIndex !== undefined) style.zIndex = elStyle.zIndex;
 
-        //recurse by all its children containers
-        for (var i in children) {
-            childrenHeight += trav(children[i]);
+        //TODO: propagate width and height to widget props
+        var elProps = el.props || {};
+        if (!elProps.width && !!elStyle.width) elProps.width = elStyle.width;
+        if (!elProps.height && !!elStyle.height) elProps.height = elStyle.height;
+
+        if (elStyle.transform !== undefined) {
+          style.WebkitTransform = (0, _generateCssTransform2['default'])(elStyle.transform);
+          style.transform = (0, _generateCssTransform2['default'])(elStyle.transform);
         }
+        // set another box
+        currentPage.boxes.push({ element: x[i], style: style });
+      }
+    }
+    return occ;
+  }, pages);
 
-        //expand container height if childrenHeight is greater than node height - typically for repeated containers
-        computedHeight = _lodash2['default'].max([nodeHeight, childrenHeight]) + nodeTop;
-        //var tmp =  node.style!==undefined?node.style.top:'--';
-        //console.log(node.name + ":" + height + "->" + top + ", " + tmp);
-
-        //compute next top
-        globalTop += computedHeight - childrenHeight;
-        //return computed height of container
-        return computedHeight;
-    };
-    trav(clonedSchema);
-
-    //step -> reduce to boxes - using containers absolute positions (top,height) and its dimensions (with, height)
-    //step -> create pages and add boxes to them
-    var pages = [];
-    var currentPage;
-    (0, _traverse2['default'])(clonedSchema).reduce(function (occ, x) {
-
-        if (this.key === BOXES_COLLECTION_NAME) {
-            var parent = this.parent.node;
-            for (var i in x) {
-                var el = x[i];
-
-                var elTop = el.style.top && parseInt(el.style.top, 10) || 0;
-                var elLeft = el.style.left && parseInt(el.style.left, 10) || 0;
-
-                //grab parent positions
-                var top = (parent.style.top && parseInt(parent.style.top, 10) || 0) + elTop;
-                var left = (parent.style.left && parseInt(parent.style.left, 10) || 0) + elLeft;
-
-                //grab parent dimensions
-                //TODO: !!!! temporarily - container width simulates boxes width
-                var height = (parent.style.height && parseInt(parent.style.height, 10) || 0) - elTop;
-                var width = (parent.style.width && parseInt(parent.style.width, 10) || 0) - elLeft;
-                //var height = parseInt(el.style.height,10);
-                //var width = parseInt(el.style.width,10);
-                if (isNaN(height)) height = 0;
-                if (isNaN(width)) width = 0;
-
-                //create newPage
-                if (currentPage === undefined || top + height > pageHeight * pages.length) {
-                    var newPage = { pageNumber: pages.length + 1, boxes: [] };
-                    pages.push(newPage);
-                    currentPage = newPage;
-                }
-
-                //decrease top according the pages
-                if (pages.length > 1) {
-                    top -= (pages.length - 1) * pageHeight;
-                };
-
-                var style = { 'left': left, 'top': top, 'position': 'absolute' };
-                if (el.style.width !== undefined) style.width = el.style.width;
-                if (el.style.height !== undefined) style.height = el.style.height;
-                if (el.style.zIndex !== undefined) style.zIndex = el.style.zIndex;
-
-                //propagate width and height to widget props
-                if (!el.props.width && !!el.style.width) el.props.width = el.style.width;
-                if (!el.props.height && !!el.style.height) el.props.height = el.style.height;
-
-                if (el.style.transform !== undefined) {
-                    style.WebkitTransform = generateCssTransform(el.style.transform);
-                    style.transform = generateCssTransform(el.style.transform);
-                }
-                // set another box
-                currentPage.boxes.push({ element: x[i], style: style });
-            }
-        }
-        return occ;
-    }, pages);
-
-    //step -> apply one-way binding
-    //_.each(pages,function(page){
-    //    _.each(page.boxes,function(node) {
-    //        var box = node.element;
-    //        for (var propName in box){
-    //            var prop = box[propName];
-    //            //TODO: better test - it is a binding object?
-    //            if (_.isObject(prop) && !!prop.Path && prop.Mode !== 'TwoWay'){
-    //                //one-way binding
-    //                box[propName] = dataBinder.getValue(prop.Path);
-    //            }
-    //        }
-    //    })
-    //});
-
-    return pages;
+  return pages;
 };
 
 exports['default'] = transformToPages;
 module.exports = exports['default'];
 
-},{"lodash":1,"traverse":3}],"react-html-pages-renderer":[function(require,module,exports){
+},{"./generateCssTransform":10,"lodash":1,"traverse":3}],"react-html-pages-renderer":[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-  value: true
+	value: true
 });
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -15914,10 +16339,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = require('react-dom');
 
@@ -15939,108 +16360,154 @@ var _utilsTransformToPages = require('./utils/transformToPages');
 
 var _utilsTransformToPages2 = _interopRequireDefault(_utilsTransformToPages);
 
+var _utilsBindToSchema = require('./utils/bindToSchema');
+
+var _utilsBindToSchema2 = _interopRequireDefault(_utilsBindToSchema);
+
+var _ContainerRendererJs = require('./ContainerRenderer.js');
+
+var _ContainerRendererJs2 = _interopRequireDefault(_ContainerRendererJs);
+
+var _HtmlRenderer = require('./HtmlRenderer');
+
+var _HtmlRenderer2 = _interopRequireDefault(_HtmlRenderer);
+
+var React = require('react');
+
 var HtmlPagesRenderer = (function (_React$Component) {
-  _inherits(HtmlPagesRenderer, _React$Component);
+	_inherits(HtmlPagesRenderer, _React$Component);
 
-  function HtmlPagesRenderer() {
-    _classCallCheck(this, HtmlPagesRenderer);
+	function HtmlPagesRenderer() {
+		_classCallCheck(this, HtmlPagesRenderer);
 
-    _get(Object.getPrototypeOf(HtmlPagesRenderer.prototype), 'constructor', this).apply(this, arguments);
-  }
+		_get(Object.getPrototypeOf(HtmlPagesRenderer.prototype), 'constructor', this).apply(this, arguments);
+	}
 
-  _createClass(HtmlPagesRenderer, [{
-    key: 'render',
-    value: function render() {
-      var schema = this.props.schema;
+	_createClass(HtmlPagesRenderer, [{
+		key: 'render',
+		value: function render() {
+			var schema = _lodash2['default'].cloneDeep(this.props.schema);
+			var dataContext = this.props.dataContext;
+			var widgets = this.props.widgets;
 
-      var defaultPageOptions = { width: 794, height: 1123 };
+			var defaultPageOptions = { width: 794, height: 1123 };
 
-      var pageOptions = this.props.pageOptions || defaultPageOptions;
-      var pageHeight = pageOptions.height;
-      var pageMargin = pageOptions.margin || {};
-      if (pageMargin.top !== undefined) pageHeight -= pageMargin.top;
-      if (pageMargin.bottom !== undefined) pageHeight -= pageMargin.bottom;
+			var pageOptions = this.props.pageOptions || defaultPageOptions;
+			var pageHeight = pageOptions.height;
+			var pageMargin = pageOptions.margin || {};
+			if (pageMargin.top !== undefined) pageHeight -= pageMargin.top;
+			if (pageMargin.bottom !== undefined) pageHeight -= pageMargin.bottom;
 
-      var pages = this.props.pages;
-      if (pages === undefined) pages = (0, _utilsTransformToPages2['default'])(schema, pageHeight);
-      var ctx = schema.props && schema.props.context || {};
-      var customStyles = ctx['styles'] || {};
+			var isGrid = schema.containers[0] && schema.containers[0].elementName === "Grid";
 
-      var code = ctx['code'] && ctx['code'].compiled;
-      //TODO: hacky way how to compile
-      if (code !== undefined) code = code.substr(code.indexOf('return')).replace('})();', '');
+			var pages = this.props.pages;
+			if (pages === undefined) pages = isGrid ? (0, _utilsBindToSchema2['default'])(schema, dataContext).containers.map(function (container, i) {
+				return { pageNumber: i, container: container };
+			}) : (0, _utilsTransformToPages2['default'])((0, _utilsBindToSchema2['default'])(schema, dataContext), pageHeight);
+			var ctx = schema.props && schema.props.context || {};
+			var customStyles = ctx['styles'] || {};
 
-      //console.log(code);
-      var customCode = !!code ? new Function(code)() : undefined;
+			var code = ctx['code'] && ctx['code'].compiled;
+			if (!!code && this.customCode === undefined) {
+				this.customCode = eval(code);
+			}
+			//append shared code to data context
+			if (dataContext !== undefined) dataContext.customCode = this.customCode;
 
-      var dataContext = this.props.dataContext;
+			var pageBackground = schema.props && schema.props.background || {};
 
-      //append shared code to data context
-      if (dataContext !== undefined) dataContext.customCode = customCode;
+			var items = schema.containers.map(function (container, i) {
+				var conProps = container.props;
+				var conBindings = container.bindings;
+				if (conBindings !== undefined && dataContext !== undefined) conProps = _WidgetRenderer2['default'].bindProps(conProps, conBindings, dataContext);
+				return { background: conProps && conProps.background || pageBackground };
+			}, this);
 
-      var pageBackground = schema.props && schema.props.background || {};
+			var normalizeBackgrounds = _lodash2['default'].map(items, function (item) {
+				return item.background;
+			}).concat(_lodash2['default'].map(_lodash2['default'].range(0, pages.length - items.length), function () {
+				return pageBackground;
+			}));
 
-      var items = schema.containers.map(function (container, i) {
-        var conProps = container.props;
-        var conBindings = container.bindings;
-        if (conBindings !== undefined && dataContext !== undefined) conProps = _WidgetRenderer2['default'].bindProps(conProps, conBindings, dataContext);
-        return { background: conProps && conProps.background || pageBackground };
-      }, this);
+			var pagesRoot = this.props.pagesRoot || 'div';
 
-      var normalizeBackgrounds = _lodash2['default'].map(items, function (item) {
-        return item.background;
-      }).concat(_lodash2['default'].map(_lodash2['default'].range(0, pages.length - items.length), function () {
-        return pageBackground;
-      }));
+			var createBoxedPage = (function (page, i) {
+				var back = normalizeBackgrounds[i];
+				return React.createElement(
+					_HtmlPageJs2['default'],
+					{ key: 'page' + i, position: i, pageNumber: page.pageNumber, widgets: widgets,
+						background: back, pageOptions: pageOptions },
+					page.boxes.map(function (node, j) {
+						var elName = node.element.elementName;
+						var widget = React.createElement(_WidgetRenderer2['default'], { key: 'page' + i + '_' + j, widget: widgets[elName],
+							node: node.element,
+							customStyle: customStyles[elName], dataBinder: dataContext });
+						return React.createElement(
+							'div',
+							{ key: 'item' + j, style: node.style },
+							React.createElement(
+								'div',
+								{ id: node.element.name },
+								widget
+							)
+						);
+					}, this)
+				);
+			}).bind(this);
 
-      var pagesRoot = this.props.pagesRoot || 'div';
+			var createGridPage = function createGridPage(page, i) {
+				var back = normalizeBackgrounds[i];
 
-      var createPage = (function (page, i) {
-        var back = normalizeBackgrounds[i];
-        return _react2['default'].createElement(
-          _HtmlPageJs2['default'],
-          { key: 'page' + i, position: i, pageNumber: page.pageNumber, widgets: this.props.widgets,
-            background: back, pageOptions: pageOptions },
-          page.boxes.map(function (node, j) {
-            var elName = node.element.elementName;
-            var widget = _react2['default'].createElement(_WidgetRenderer2['default'], { key: 'page' + i + '_' + j, widget: this.props.widgets[elName],
-              node: node.element,
-              customStyle: customStyles[elName], dataBinder: dataContext });
-            return _react2['default'].createElement(
-              'div',
-              { key: 'item' + j, style: node.style },
-              _react2['default'].createElement(
-                'div',
-                { id: node.element.name },
-                widget
-              )
-            );
-          }, this)
-        );
-      }).bind(this);
+				return React.createElement(
+					_HtmlPageJs2['default'],
+					{ key: 'page' + i, position: i, pageNumber: page.pageNumber, widgets: widgets,
+						background: back, pageOptions: pageOptions, title: 'Page ' + i },
+					React.createElement(_ContainerRendererJs2['default'], { elementName: page.container.elementName,
+						containers: page.container.containers,
+						node: page.container,
+						boxes: page.container.boxes,
+						dataBinder: dataContext,
+						ctx: ctx,
+						widgets: widgets,
+						widgetRenderer: _WidgetRenderer2['default']
+					})
+				);
+			};
 
-      var counter = 0;
-      var double = pageOptions.doublePage || false;
+			var createPage = isGrid ? createGridPage : createBoxedPage;
 
-      return _react2['default'].createElement(pagesRoot, { id: "section-to-print", style: this.props.style }, double ? _lodash2['default'].chunk(pages, 2).map(function (item, index) {
-        return _react2['default'].createElement(
-          'div',
-          { style: { display: '-webkit-flex' }, key: index },
-          item.map(function (page) {
-            return createPage(page, counter++);
-          }, this)
-        );
-      }, this) : pages.map(function (page) {
-        return createPage(page, counter++);
-      }));
-    }
-  }]);
+			var counter = 0;
+			var double = pageOptions.doublePage || false;
 
-  return HtmlPagesRenderer;
-})(_react2['default'].Component);
+			return React.createElement(pagesRoot, { className: 'printable', id: "section-to-print", style: this.props.style, swipeOptions: { continuous: true }, key: pages.length }, double ? _lodash2['default'].chunk(pages, 2).map(function (item, index) {
+				return React.createElement(
+					'div',
+					{ key: 'page' + index, title: index },
+					React.createElement(
+						'div',
+						{ className: 'doublePageStyle', key: index },
+						item.map(function (page) {
+							return createPage(page, counter++);
+						}, this)
+					)
+				);
+			}, this) : pages.map(function (page, index) {
+				return React.createElement(
+					'div',
+					{ title: 'Page ' + index },
+					createPage(page, counter++)
+				);
+			}));
+		}
+	}]);
+
+	return HtmlPagesRenderer;
+})(React.Component);
 
 exports['default'] = HtmlPagesRenderer;
 ;
-module.exports = exports['default'];
 
-},{"./HtmlPage.js":4,"./WidgetRenderer":5,"./utils/transformToPages":7,"lodash":1,"react":undefined,"react-dom":undefined}]},{},[]);
+exports.HtmlPagesRenderer = HtmlPagesRenderer;
+exports.HtmlRenderer = _HtmlRenderer2['default'];
+
+},{"./ContainerRenderer.js":4,"./HtmlPage.js":5,"./HtmlRenderer":6,"./WidgetRenderer":7,"./utils/bindToSchema":9,"./utils/transformToPages":11,"lodash":1,"react":undefined,"react-dom":undefined}]},{},[]);
