@@ -1,6 +1,6 @@
 {
   "name": "react-html-pages-renderer",
-  "version": "1.8.1",
+  "version": "1.8.2",
   "description": "HtmlPagesRenderer",
   "main": "lib/HtmlPagesRenderer.js",
   "author": "Roman Samec",
@@ -33,7 +33,7 @@
     "react-loader": "^2.2.0",
     "react-mfb": "^0.3.0",
     "react-pathjs-chart": "^0.3.4",
-    "react-photo-widget-factory": "^1.2.2",
+    "react-photo-widget-factory": "^1.2.3",
     "react-router": "^2.0.0-rc5",
     "react-swipe": "^5.0.3",
     "swipe-js-iso": "^2.0.3"
