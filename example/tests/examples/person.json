@@ -1,0 +1,85 @@
+{
+    "elementName": "ObjectSchema",
+    "name": "MobxTest",
+    "containers": [
+        {
+            "elementName": "Container",
+            "boxes": [
+                {
+                    "elementName": "Core.TextBoxInput",
+                    "bindings": {
+                        "value": {
+                            "path": "Person.FirstName",
+                            "mode": "TwoWay"
+                        }
+                    }
+                },
+                {
+                    "elementName": "Core.TextContent",
+                    "bindings": {
+                        "content": {
+                            "path": "Person.FirstName",
+                            "mode": "OneWay"
+                        }
+                    }
+                },
+                {
+                    "elementName": "Core.TextBoxInput",
+                    "bindings": {
+                        "value": {
+                            "path": "Person.LastName",
+                            "mode": "TwoWay"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "elementName": "Container",
+            "boxes": [
+                {
+                    "elementName": "Core.TextContent",
+                    "bindings": {
+                        "content": {
+                            "path": "Person",
+                            "mode": "OneWay",
+                            "converter": {
+                                "code": "return {\n  format:function(value){\n    return value.FirstName + \" \" + value.LastName;\n  }\n}",
+                                "compiled": "(function () {\n  return {\n    format: function (value) {\n      return value.FirstName + \" \" + value.LastName;\n    }\n  };\n})();"
+                            }
+                        }
+                    }
+                },
+                {
+                    "elementName": "Core.TextContent",
+                    "name": "FullName.TextContent with shared converter",
+                    "props": {},
+                    "bindings": {
+                        "content": {
+                            "path": "Person",
+                            "mode": "OneWay",
+                            "converter": {
+                                "code": "return \"convertToFullName\";",
+                                "compiled": "(function () {\n  return \"convertToFullName\";\n})();"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "props": {
+        "defaultData": {
+            "Person": {
+                "FirstName": "Roman",
+                "LastName": "Samec"
+            }
+        },
+        "context": {
+            "code": {
+                "code": "return {\n      convertToFullName: { format: function(input,args) {\n        if (input === undefined) return;\n        return input.FirstName + \" \" + input.LastName\n      }}      \n}",
+                "compiled": "(function () {\n  return {\n    convertToFullName: { format: function (input, args) {\n        if (input === undefined) return;\n        return input.FirstName + \" \" + input.LastName;\n      } }\n  };\n})();"
+            }
+        }
+    }
+}

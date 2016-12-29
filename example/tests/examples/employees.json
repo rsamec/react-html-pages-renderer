@@ -1,0 +1,198 @@
+{
+    "elementName": "ObjectSchema",
+    "name": "MobxTest",
+    "containers": [
+        {
+            "elementName": "Container",
+            "boxes": [
+                {
+                    "elementName": "Core.TextContent",
+                    "bindings": {
+                        "content": {
+                            "path": "Employees",
+                            "mode": "OneWay",
+                            "converter": {
+                                "code": "return {\n\tformat:function(input){      \n      return !!input?input.length:0;\n    }\n}",
+                                "compiled": "(function () {\n  return {\n    format: function (input) {\n      return !!input ? input.length : 0;\n    }\n  };\n})();"
+                            }
+                        }
+                    }
+                },
+                {
+                    "elementName": "Core.JsxContent",
+                    "props": {
+                        "content": {
+                            "code": "return <pre>{JSON.stringify(props.data)}</pre>",
+                            "compiled": "(function () {\n  return React.createElement(\n    \"pre\",\n    null,\n    JSON.stringify(props.data)\n  );\n})();"
+                        }
+                    },
+                    "bindings": {
+                        "data": {
+                            "path": "Employees",
+                            "mode": "OneWay"
+                        }
+                    }
+                },
+                {
+                    "elementName": "react-input-range.InputRange",
+                    "props": {
+                        "maxValue": 100,
+                        "minValue": 0
+                    },
+                    "bindings": {
+                        "value": {
+                            "path": "Employees",
+                            "mode": "TwoWay",
+                            "converter": {
+                                "code": "return {\n  \tformat:function(input){\n      return !!input?input.length:0;\n    },\n\tparse:function(count){      \n      return Array.apply(0, Array(count))\n        .map(function (element, index) { \n          return {Person:{\"FirstName\": \"Roman \" + index,\n    \"LastName\": \"Samec \" + index, Addresses:[]}};  \n      });      \n    }\n}",
+                                "compiled": "(function () {\n  return {\n    format: function (input) {\n      return !!input ? input.length : 0;\n    },\n    parse: function (count) {\n      return Array.apply(0, Array(count)).map(function (element, index) {\n        return { Person: { \"FirstName\": \"Roman \" + index,\n            \"LastName\": \"Samec \" + index, Addresses: [] } };\n      });\n    }\n  };\n})();"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "elementName": "Repeater",
+            "containers": [
+                {
+                    "elementName": "Container",
+                    "boxes": [
+                        {
+                            "elementName": "Core.TextBoxInput",
+                            "bindings": {
+                                "value": {
+                                    "path": "Person.LastName",
+                                    "mode": "TwoWay"
+                                }
+                            }
+                        },
+                        {
+                            "elementName": "Core.TextBoxInput",
+                            "bindings": {
+                                "value": {
+                                    "path": "Person.FirstName",
+                                    "mode": "TwoWay"
+                                }
+                            }
+                        },
+                        {
+                            "elementName": "react-input-range.InputRange",
+                            "props": {
+                                "maxValue": 10,
+                                "minValue": 0
+                            },
+                            "bindings": {
+                                "value": {
+                                    "path": "Person.Addresses",
+                                    "mode": "TwoWay",
+                                    "converter": {
+                                        "code": "return {\n  \tformat:function(input){\n      return !!input?input.length:0;\n    },\n\tparse:function(count){      \n      return Array.apply(0, Array(count))\n        .map(function (element, index) { \n          return {Address:{\"Street\": \"Street \" + index}};  \n      });      \n    }\n}",
+                                        "compiled": "(function () {\n  return {\n    format: function (input) {\n      return !!input ? input.length : 0;\n    },\n    parse: function (count) {\n      return Array.apply(0, Array(count)).map(function (element, index) {\n        return { Address: { \"Street\": \"Street \" + index } };\n      });\n    }\n  };\n})();"
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            "elementName": "Core.TextContent",
+                            "bindings": {
+                                "content": {
+                                    "path": "Person",
+                                    "mode": "OneWay",
+                                    "converter": {
+                                        "code": "return {\n  format:function(value){\n    if (value === undefined) return;\n    return value.FirstName + \" \" + value.LastName;\n  }\n}",
+                                        "compiled": "(function () {\n  return {\n    format: function (value) {\n      if (value === undefined) return;\n      return value.FirstName + \" \" + value.LastName;\n    }\n  };\n})();"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "elementName": "Repeater",
+                    "containers": [
+                        {
+                            "elementName": "Container",
+                            "boxes": [
+                                {
+                                    "elementName": "Core.TextBoxInput",
+                                    "bindings": {
+                                        "value": {
+                                            "path": "Address.Street",
+                                            "mode": "TwoWay"
+                                        }
+                                    }
+                                },
+                                {
+                                    "elementName": "Core.TextContent",
+                                    "bindings": {
+                                        "content": {
+                                            "path": "Address.Street",
+                                            "mode": "OneWay"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    ],
+                    "boxes": [],
+                    "name": "Repeater",
+                    "props": {},
+                    "bindings": {
+                        "binding": {
+                            "path": "Person.Addresses",
+                            "mode": "OneWay"
+                        }
+                    }
+                }
+            ],
+            "boxes": [],
+            "name": "Repeater",
+            "props": {},
+            "bindings": {
+                "binding": {
+                    "path": "Employees",
+                    "mode": "OneWay"
+                }
+            }
+        },
+        {
+            "elementName": "Container",
+            "boxes": [
+                {
+                    "elementName": "Core.TextContent",
+                    "bindings": {
+                        "content": {
+                            "path": "Employees",
+                            "mode": "OneWay",
+                            "converter": {
+                                "code": "return {\n  format:function(values){\n    return _.reduce(values,function(result,value){\n      if (value === undefined) return result;\n      var person = value.Person;\n      if (person === undefined) return result;\n      result += person.FirstName + \" \" + person.LastName + \",\";\n      return result;\n    },\"Employees: \");\n  }\n}",
+                                "compiled": "(function () {\n  return {\n    format: function (values) {\n      return _.reduce(values, function (result, value) {\n        if (value === undefined) return result;\n        var person = value.Person;\n        if (person === undefined) return result;\n        result += person.FirstName + \" \" + person.LastName + \",\";\n        return result;\n      }, \"Employees: \");\n    }\n  };\n})();"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "props": {
+        "defaultData": {
+            "Employees": [
+                {
+                    "Person": {
+                        "FirstName": "Roman",
+                        "LastName": "Samec",
+                        "Addresses": [
+                            {
+                                "Address": {}
+                            },
+                            {
+                                "Address": {}
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}

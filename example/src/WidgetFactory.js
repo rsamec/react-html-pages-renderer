@@ -6,10 +6,6 @@ import Grid from './containers/GridWrapper';
 import Cell from './containers/CellWrapper';
 import InputRange from './widgets/InputRange';
 
-
-
-
-
 export default {
 
 	"BackgroundContainer":BackgroundContainer,

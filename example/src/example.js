@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom';
-import Binder from 'react-binding';
+import Binder from 'react-binding/lib/MobxBinder';
+import Freezer from 'freezer-js';
 
 import HtmlPagesRenderer,{HtmlRenderer} from 'react-html-pages-renderer';
-import Widgets from './WidgetFactory';
 import { Router, Route, Link, IndexRoute, hashHistory } from 'react-router';
 import Joyride from 'react-joyride';
 import {Menu, MainButton, ChildButton} from 'react-mfb';
@@ -11,6 +11,10 @@ import Loader from 'react-loader';
 //import SwipeViews from 'react-swipe-views';
 import SwipeViews from 'react-swipe';
 import Helmet from "react-helmet";
+import _ from "lodash";
+
+import Widgets from './WidgetFactory';
+import {initBindings} from './utils/bindToSchema';
 
 //var Frame = require('react-frame-component');
 
@@ -21,6 +25,20 @@ const SERVICE_URL = 'http://www.paperify.io/api';
 class HtmlBook extends React.Component {
 	render(){return <HtmlView {...this.props} type="book" />}
 }
+
+let bindToData = (WrappedComponent) => {
+	return class connectTo extends React.Component {
+	
+		render() {
+			if (this.frozenSchema === undefined) return <div>Loading...</div>;
+			const newProps = {
+				schema: this.frozenSchema.get()
+			}
+			return <WrappedComponent {...newProps} {...this.props} />
+		}
+	}
+}
+
 
 class HtmlView extends React.Component {
 
@@ -43,15 +61,33 @@ class HtmlView extends React.Component {
 			success: function (data) {
 				var schema = JSON.parse(data.schemaTemplate);
 				var data = data.data || (schema.props && schema.props.defaultData) || {};
+
+				//schema
+				me.frozenSchema = new Freezer(schema);
+				me.frozenSchema.on('update',function(updated,previous){
+					console.log('UPDATED');
+				
+					me.setState({
+						schema:updated
+					});
+
+				});
+
+				//data
+				var dataContext = Binder.bindToState(data);			
+								
+				initBindings(me.frozenSchema,me.frozenSchema.get(),dataContext);
+
+				
 				me.setState({
 					loaded: true,
-					schema: schema,
+					schema: me.frozenSchema.get(),
 					data: data,
-					pageOptions: schema.props.pageOptions, //(data.customData && data.customData.pageOptions) ,
+					pageOptions: schema.props && schema.props.pageOptions, //(data.customData && data.customData.pageOptions) ,
 					error: {hasError: false},
-					steps:data.tour
+					steps:data.tour,
 				});
-				if (data.tour !== undefined) me.refs.joyride.start(false);
+				//if (data.tour !== undefined) me.refs.joyride.start(false);
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				me.setState({
@@ -63,6 +99,9 @@ class HtmlView extends React.Component {
 			}
 		})
 	}
+	
+	
+	
 	pinInterest(){
 		var PININTEREST_API_KEY = 'https://assets.pinterest.com/sdk/sdk.js';
 	}
@@ -100,8 +139,8 @@ class HtmlView extends React.Component {
 
 		
 		var schema = this.state.schema;
-		var dataContext = Binder.bindToState(this, 'data');
 
+		//console.log(dataContext.value);	
 		var url = this.getUrl();
 		var twitterShare =`http://twitter.com/share?text=${schema.name}&url=${url}&hashtags=photo,album`;
 		//console.log(twitterShare);
@@ -112,12 +151,12 @@ class HtmlView extends React.Component {
 
 		var isResponsive = schema.containers[0] && schema.containers[0].elementName === "Grid";
 		if (isResponsive) meta.push({"name": "viewport", "content": "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"});
-		
+
 		return (<div>
 			<Helmet title={schema.name}  meta={meta} />
 			{this.props.type === "book"?
-			<HtmlPagesRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />:
-			<HtmlRenderer widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} />}
+			<HtmlPagesRenderer widgets={Widgets} schema={schema} data={this.state.data} pageOptions={this.state.pageOptions} />:
+			<HtmlRenderer widgets={Widgets} schema={schema}  />}
 
 			<Joyride className="hidden-print" ref="joyride" steps={this.state.steps} debug={true}   showSkipButton={true} type="continuous" />
 			<Menu className="hidden-print" effect='zoomin' method='hover' position='bl'>
@@ -171,15 +210,33 @@ class SwipeView extends React.Component{
 			success: function (data) {
 				var schema = JSON.parse(data.schemaTemplate);
 				var data = data.data || (schema.props && schema.props.defaultData) || {};
+
+				//schema
+				me.frozenSchema = new Freezer(schema);
+				me.frozenSchema.on('update',function(updated,previous){
+					console.log('UPDATED');
+				
+					me.setState({
+						schema:updated
+					});
+
+				});
+
+				//data
+				var dataContext = Binder.bindToState(data);			
+								
+				initBindings(me.frozenSchema,me.frozenSchema.get(),dataContext);
+
+				
 				me.setState({
 					loaded: true,
-					schema: schema,
+					schema: me.frozenSchema.get(),
 					data: data,
-					pageOptions: schema.props.pageOptions, //(data.customData && data.customData.pageOptions) ,
+					pageOptions: schema.props && schema.props.pageOptions, //(data.customData && data.customData.pageOptions) ,
 					error: {hasError: false},
-					steps:data.tour
+					steps:data.tour,
 				});
-				if (data.tour !== undefined) me.refs.joyride.start(false);
+				//if (data.tour !== undefined) me.refs.joyride.start(false);
 			},
 			error: function (xhr, ajaxOptions, thrownError) {
 				me.setState({
@@ -198,11 +255,11 @@ class SwipeView extends React.Component{
 
 
 		var schema = this.state.schema;
-		var dataContext = Binder.bindToState(this, 'data');
-
+		//var dataContext = this.state.dataContext;//Binder.bindToState(this, 'data');
+		
 		//var swipeViews = <SwipeViews swipeOptions={{continuous: false}}/>;
 		//return  <Frame initialContent="<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width'><link type='text/css' rel='stylesheet' href='example.css' /></head><body><div style='width:100%;height:100%;'></div></body></html>"><HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} /></Frame>
-		return <HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} /> 
+		return <HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} data={this.state.data} pageOptions={this.state.pageOptions} />
 	}
 }
 class App extends React.Component {
@@ -224,7 +281,7 @@ class Welcome extends React.Component {
 	}
 	load(searchText){
 		var me = this;
-		var url = SERVICE_URL + "/docs/?limit=50";
+		var url = SERVICE_URL + "/docs/?limit=5000";
 		if (!!searchText) url +="&name__regex=/^" + searchText + "/i";
 		//console.log(url);
 		$.ajax({

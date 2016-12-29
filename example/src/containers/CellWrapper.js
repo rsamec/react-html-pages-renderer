@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import { Grid, Cell } from 'react-flexr';
 
 import backgroundStyle from './utils/backgroundStyle';
@@ -48,7 +49,7 @@ let CellWrapper = (props) => {
 		styles.paddingLeft = size.left;
 	}
 
-	
+	//console.log(selfProps.name);
 	return <Cell {...props}><div style={styles}>{props.children}</div></Cell>
 }
 

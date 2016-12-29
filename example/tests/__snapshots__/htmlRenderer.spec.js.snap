@@ -1,0 +1,585 @@
+exports[`Html rendering employees schema renders correctly 1`] = `
+<div
+  className="printable"
+  id="section-to-print"
+  style={undefined}>
+  <div
+    style={Object {}}>
+    <div
+      style={
+        Object {
+          "height": undefined,
+          "left": undefined,
+          "position": "relative",
+          "top": undefined,
+          "width": undefined,
+        }
+      }>
+      <div>
+        <div>
+          <div
+            style={
+              Object {
+                "height": undefined,
+                "left": 0,
+                "position": "relative",
+                "top": 0,
+                "width": undefined,
+              }
+            }>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <span
+                  style={Object {}}>
+                  1
+                </span>
+              </div>
+            </div>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <span>
+                  Converting circular structure to JSON
+                </span>
+              </div>
+            </div>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <div
+                  style={Object {}}>
+                  <div
+                    aria-disabled={false}
+                    className="InputRange"
+                    onKeyDown={[Function]}
+                    onKeyUp={[Function]}
+                    onMouseDown={[Function]}
+                    onTouchStart={[Function]}>
+                    <span
+                      className="InputRange-label InputRange-label--min">
+                      <span
+                        className="InputRange-labelContainer">
+                        0
+                      </span>
+                    </span>
+                    <div
+                      className="InputRange-track InputRange-track--container"
+                      onMouseDown={[Function]}
+                      onTouchStart={[Function]}>
+                      <div
+                        className="InputRange-track InputRange-track--active"
+                        style={
+                          Object {
+                            "left": "0%",
+                            "width": "1%",
+                          }
+                        } />
+                      <span
+                        className="InputRange-sliderContainer"
+                        style={
+                          Object {
+                            "left": "1%",
+                            "position": "absolute",
+                          }
+                        }>
+                        <span
+                          className="InputRange-label InputRange-label--value">
+                          <span
+                            className="InputRange-labelContainer">
+                            1
+                          </span>
+                        </span>
+                        <a
+                          aria-controls={undefined}
+                          aria-labelledby={undefined}
+                          aria-valuemax={100}
+                          aria-valuemin={0}
+                          aria-valuenow={1}
+                          className="InputRange-slider"
+                          draggable="false"
+                          href="#"
+                          onClick={[Function]}
+                          onKeyDown={[Function]}
+                          onMouseDown={[Function]}
+                          onTouchStart={[Function]}
+                          role="slider" />
+                      </span>
+                    </div>
+                    <span
+                      className="InputRange-label InputRange-label--max">
+                      <span
+                        className="InputRange-labelContainer">
+                        100
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            style={
+              Object {
+                "height": undefined,
+                "left": 0,
+                "position": "relative",
+                "top": 0,
+                "width": undefined,
+              }
+            }>
+            <div>
+              <div>
+                <div
+                  style={
+                    Object {
+                      "height": undefined,
+                      "left": 0,
+                      "position": "relative",
+                      "top": 0,
+                      "width": undefined,
+                    }
+                  }>
+                  <div>
+                    <div>
+                      <div
+                        style={
+                          Object {
+                            "height": undefined,
+                            "left": 0,
+                            "position": "relative",
+                            "top": 0,
+                            "width": undefined,
+                          }
+                        }>
+                        <div
+                          style={
+                            Object {
+                              "position": "absolute",
+                            }
+                          }>
+                          <div>
+                            <label>
+                              <input
+                                defaultValue="Samec"
+                                onChange={[Function]}
+                                placeholder={undefined}
+                                type="text"
+                                value="Samec" />
+                            </label>
+                          </div>
+                        </div>
+                        <div
+                          style={
+                            Object {
+                              "position": "absolute",
+                            }
+                          }>
+                          <div>
+                            <label>
+                              <input
+                                defaultValue="Roman"
+                                onChange={[Function]}
+                                placeholder={undefined}
+                                type="text"
+                                value="Roman" />
+                            </label>
+                          </div>
+                        </div>
+                        <div
+                          style={
+                            Object {
+                              "position": "absolute",
+                            }
+                          }>
+                          <div>
+                            <div
+                              style={Object {}}>
+                              <div
+                                aria-disabled={false}
+                                className="InputRange"
+                                onKeyDown={[Function]}
+                                onKeyUp={[Function]}
+                                onMouseDown={[Function]}
+                                onTouchStart={[Function]}>
+                                <span
+                                  className="InputRange-label InputRange-label--min">
+                                  <span
+                                    className="InputRange-labelContainer">
+                                    0
+                                  </span>
+                                </span>
+                                <div
+                                  className="InputRange-track InputRange-track--container"
+                                  onMouseDown={[Function]}
+                                  onTouchStart={[Function]}>
+                                  <div
+                                    className="InputRange-track InputRange-track--active"
+                                    style={
+                                      Object {
+                                        "left": "0%",
+                                        "width": "20%",
+                                      }
+                                    } />
+                                  <span
+                                    className="InputRange-sliderContainer"
+                                    style={
+                                      Object {
+                                        "left": "20%",
+                                        "position": "absolute",
+                                      }
+                                    }>
+                                    <span
+                                      className="InputRange-label InputRange-label--value">
+                                      <span
+                                        className="InputRange-labelContainer">
+                                        2
+                                      </span>
+                                    </span>
+                                    <a
+                                      aria-controls={undefined}
+                                      aria-labelledby={undefined}
+                                      aria-valuemax={10}
+                                      aria-valuemin={0}
+                                      aria-valuenow={2}
+                                      className="InputRange-slider"
+                                      draggable="false"
+                                      href="#"
+                                      onClick={[Function]}
+                                      onKeyDown={[Function]}
+                                      onMouseDown={[Function]}
+                                      onTouchStart={[Function]}
+                                      role="slider" />
+                                  </span>
+                                </div>
+                                <span
+                                  className="InputRange-label InputRange-label--max">
+                                  <span
+                                    className="InputRange-labelContainer">
+                                    10
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          style={
+                            Object {
+                              "position": "absolute",
+                            }
+                          }>
+                          <div>
+                            <span
+                              style={Object {}}>
+                              Roman Samec
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <div
+                        style={
+                          Object {
+                            "height": undefined,
+                            "left": 0,
+                            "position": "relative",
+                            "top": 0,
+                            "width": undefined,
+                          }
+                        }>
+                        <div>
+                          <div>
+                            <div
+                              style={
+                                Object {
+                                  "height": undefined,
+                                  "left": 0,
+                                  "position": "relative",
+                                  "top": 0,
+                                  "width": undefined,
+                                }
+                              }>
+                              <div>
+                                <div>
+                                  <div
+                                    style={
+                                      Object {
+                                        "height": undefined,
+                                        "left": 0,
+                                        "position": "relative",
+                                        "top": 0,
+                                        "width": undefined,
+                                      }
+                                    }>
+                                    <div
+                                      style={
+                                        Object {
+                                          "position": "absolute",
+                                        }
+                                      }>
+                                      <div>
+                                        <label>
+                                          <input
+                                            defaultValue={undefined}
+                                            onChange={[Function]}
+                                            placeholder={undefined}
+                                            type="text"
+                                            value={undefined} />
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <div
+                                      style={
+                                        Object {
+                                          "position": "absolute",
+                                        }
+                                      }>
+                                      <div>
+                                        <span
+                                          style={Object {}}>
+                                          type your content
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div>
+                            <div
+                              style={
+                                Object {
+                                  "height": undefined,
+                                  "left": 0,
+                                  "position": "relative",
+                                  "top": 0,
+                                  "width": undefined,
+                                }
+                              }>
+                              <div>
+                                <div>
+                                  <div
+                                    style={
+                                      Object {
+                                        "height": undefined,
+                                        "left": 0,
+                                        "position": "relative",
+                                        "top": 0,
+                                        "width": undefined,
+                                      }
+                                    }>
+                                    <div
+                                      style={
+                                        Object {
+                                          "position": "absolute",
+                                        }
+                                      }>
+                                      <div>
+                                        <label>
+                                          <input
+                                            defaultValue={undefined}
+                                            onChange={[Function]}
+                                            placeholder={undefined}
+                                            type="text"
+                                            value={undefined} />
+                                        </label>
+                                      </div>
+                                    </div>
+                                    <div
+                                      style={
+                                        Object {
+                                          "position": "absolute",
+                                        }
+                                      }>
+                                      <div>
+                                        <span
+                                          style={Object {}}>
+                                          type your content
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            style={
+              Object {
+                "height": undefined,
+                "left": 0,
+                "position": "relative",
+                "top": 0,
+                "width": undefined,
+              }
+            }>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <span
+                  style={Object {}}>
+                  Employees: Roman Samec,
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Html rendering person schema renders correctly 1`] = `
+<div
+  className="printable"
+  id="section-to-print"
+  style={undefined}>
+  <div
+    style={Object {}}>
+    <div
+      style={
+        Object {
+          "height": undefined,
+          "left": undefined,
+          "position": "relative",
+          "top": undefined,
+          "width": undefined,
+        }
+      }>
+      <div>
+        <div>
+          <div
+            style={
+              Object {
+                "height": undefined,
+                "left": 0,
+                "position": "relative",
+                "top": 0,
+                "width": undefined,
+              }
+            }>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <label>
+                  <input
+                    defaultValue="Roman"
+                    onChange={[Function]}
+                    placeholder={undefined}
+                    type="text"
+                    value="Roman" />
+                </label>
+              </div>
+            </div>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <span
+                  style={Object {}}>
+                  Roman
+                </span>
+              </div>
+            </div>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <label>
+                  <input
+                    defaultValue="Samec"
+                    onChange={[Function]}
+                    placeholder={undefined}
+                    type="text"
+                    value="Samec" />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            style={
+              Object {
+                "height": undefined,
+                "left": 0,
+                "position": "relative",
+                "top": 0,
+                "width": undefined,
+              }
+            }>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <span
+                  style={Object {}}>
+                  Roman Samec
+                </span>
+              </div>
+            </div>
+            <div
+              style={
+                Object {
+                  "position": "absolute",
+                }
+              }>
+              <div>
+                <span
+                  style={Object {}}>
+                  Roman Samec
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

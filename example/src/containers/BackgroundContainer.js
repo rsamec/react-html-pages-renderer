@@ -1,4 +1,6 @@
 import React from 'react';
+import _ from 'lodash';
+
 import backgroundStyle from './utils/backgroundStyle';
 import styleBorder from'./utils/border'
 
@@ -22,8 +24,11 @@ let BackgroundContainer = (props) => {
 
 		//border
 		if (props.border !== undefined) styleBorder(styles, props.border);
+
+		var containerProps = {style:styles}
+		if (props.name !== undefined)containerProps['id'] = props.name
 	//}
-	return <div><div style={styles}></div><div {...props}>{props.children}</div></div>
+	return <div><div {...containerProps}></div><div>{props.children}</div></div>
 }
 
 export default BackgroundContainer; 

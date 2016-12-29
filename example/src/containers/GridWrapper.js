@@ -1,4 +1,6 @@
 import React from 'react';
+import _ from 'lodash';
+
 import { Grid, Cell } from 'react-flexr';
 import backgroundStyle from './utils/backgroundStyle';
 import styleBorder from'./utils/border'
