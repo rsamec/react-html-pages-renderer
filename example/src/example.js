@@ -74,7 +74,7 @@ class HtmlView extends React.Component {
 				});
 
 				//data
-				var dataContext = Binder.bindToState(data);			
+				var dataContext = Binder.bindTo(data);			
 								
 				initBindings(me.frozenSchema,me.frozenSchema.get(),dataContext);
 
@@ -223,7 +223,7 @@ class SwipeView extends React.Component{
 				});
 
 				//data
-				var dataContext = Binder.bindToState(data);			
+				var dataContext = Binder.bindTo(data);			
 								
 				initBindings(me.frozenSchema,me.frozenSchema.get(),dataContext);
 
