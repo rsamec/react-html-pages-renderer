@@ -18288,8 +18288,10 @@ function transformToPages(clonedSchema, pageHeight) {
 
     var props = node.props || {};
 
+    //test visibility
+
     //grap height and top properties
-    var nodeHeight = node.style === undefined ? 0 : parseInt(node.style.height, 10);
+    var nodeHeight = props.visibility !== undefined && !!!props.visibility || node.style === undefined ? 0 : parseInt(node.style.height, 10);
     if (isNaN(nodeHeight)) nodeHeight = 0;
     var nodeTop = node.style === undefined ? 0 : parseInt(node.style.top, 10);
     if (isNaN(nodeTop)) nodeTop = 0;
@@ -18337,6 +18339,9 @@ function transformToPages(clonedSchema, pageHeight) {
 
     if (this.key === BOXES_COLLECTION_NAME) {
       var parent = this.parent.node;
+      var parentProps = parent.props || {};
+
+      if (parentProps.visibility !== undefined && !!!parentProps.visibility) return;
       for (var i in x) {
         var el = x[i];
         var elStyle = el.style || {};
@@ -18390,7 +18395,7 @@ function transformToPages(clonedSchema, pageHeight) {
     }
     return occ;
   }, pages);
-
+  console.log("transform pages done");
   return pages;
 };
 
