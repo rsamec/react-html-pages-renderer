@@ -14,13 +14,14 @@ import Helmet from "react-helmet";
 import _ from "lodash";
 
 import Widgets from './WidgetFactory';
-import {initBindings} from './utils/bindToSchema';
+import { reaction } from 'mobx';
+import {initBindings,freezerCursor} from 'ptt-binding';
 
 //var Frame = require('react-frame-component');
 
-const SERVICE_URL = 'http://www.paperify.io/api';
+//const SERVICE_URL = 'http://www.paperify.io/api';
 //const SERVICE_URL = 'http://photo-papermill.rhcloud.com';
-//const SERVICE_URL = "http://localhost:8080";
+const SERVICE_URL = "http://localhost:8080/api";
 
 class HtmlBook extends React.Component {
 	render(){return <HtmlView {...this.props} type="book" />}
@@ -76,7 +77,7 @@ class HtmlView extends React.Component {
 				//data
 				var dataContext = Binder.bindTo(data);			
 								
-				initBindings(me.frozenSchema,me.frozenSchema.get(),dataContext);
+				initBindings(new freezerCursor(me.frozenSchema),me.frozenSchema.get(),dataContext,reaction);
 
 				
 				me.setState({
@@ -259,7 +260,7 @@ class SwipeView extends React.Component{
 		
 		//var swipeViews = <SwipeViews swipeOptions={{continuous: false}}/>;
 		//return  <Frame initialContent="<!DOCTYPE html><html><head><meta name='viewport' content='width=device-width'><link type='text/css' rel='stylesheet' href='example.css' /></head><body><div style='width:100%;height:100%;'></div></body></html>"><HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} dataContext={dataContext} pageOptions={this.state.pageOptions} /></Frame>
-		return <HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} data={this.state.data} pageOptions={this.state.pageOptions} />
+		return <HtmlPagesRenderer pagesRoot={SwipeViews} widgets={Widgets} schema={schema} pageOptions={this.state.pageOptions} />
 	}
 }
 class App extends React.Component {
@@ -281,7 +282,7 @@ class Welcome extends React.Component {
 	}
 	load(searchText){
 		var me = this;
-		var url = SERVICE_URL + "/docs/?limit=5000";
+		var url = SERVICE_URL + "/docs";
 		if (!!searchText) url +="&name__regex=/^" + searchText + "/i";
 		//console.log(url);
 		$.ajax({

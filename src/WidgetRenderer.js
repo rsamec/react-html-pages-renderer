@@ -10,7 +10,7 @@ export default class WidgetRenderer extends React.Component {
 			return React.DOM.span(null, 'Component ' + box.elementName + ' is not register among widgets.');
 		}
 		var defaultProps = _.cloneDeep(widget.defaultProps) || {};
-		var props = _.merge(defaultProps, box.props.toJS !== undefined?box.props.toJS():box.props);
+		var props = _.merge(defaultProps,_.isFunction(box.props.toJS)?box.props.toJS():box.props);
 
 		//attach custom code to be available to widgets
 		if (this.props.customCode !== undefined) { props.customCode = this.props.customCode }

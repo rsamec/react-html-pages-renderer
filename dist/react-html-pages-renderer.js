@@ -17880,13 +17880,13 @@ var HtmlPagesRenderer = (function (_React$Component) {
 			var pages = this.props.pages;
 			if (pages === undefined) pages = isGrid ? schema.containers.map(function (container, i) {
 				return { pageNumber: i, container: container, pageBackground: container.props.background || pageBackground };
-			}) : (0, _utilsTransformToPages2['default'])(schema.toJS(), pageHeight);
+			}) : (0, _utilsTransformToPages2['default'])(_lodash2['default'].isFunction(schema.toJS) ? schema.toJS() : schema, pageHeight);
 
 			var pageBackground = schema.props && schema.props.background || {};
 
 			var items = schema.containers.map(function (container, i) {
 				var conProps = container.props;
-				var conBindings = container.bindings;
+				//var conBindings = container.bindings;
 				//if (conBindings !== undefined && dataContext !== undefined) conProps = WidgetRenderer.bindProps(conProps, conBindings, dataContext);
 				return { background: conProps && conProps.background || pageBackground };
 			}, this);
@@ -18098,7 +18098,7 @@ var WidgetRenderer = (function (_React$Component) {
 				return _react2['default'].DOM.span(null, 'Component ' + box.elementName + ' is not register among widgets.');
 			}
 			var defaultProps = _lodash2['default'].cloneDeep(widget.defaultProps) || {};
-			var props = _lodash2['default'].merge(defaultProps, box.props.toJS !== undefined ? box.props.toJS() : box.props);
+			var props = _lodash2['default'].merge(defaultProps, _lodash2['default'].isFunction(box.props.toJS) ? box.props.toJS() : box.props);
 
 			//attach custom code to be available to widgets
 			if (this.props.customCode !== undefined) {

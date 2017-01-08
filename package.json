@@ -1,6 +1,6 @@
 {
   "name": "react-html-pages-renderer",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "HtmlPagesRenderer",
   "main": "lib/HtmlPagesRenderer.js",
   "author": "Roman Samec",
@@ -33,6 +33,7 @@
     "jest": "^18.0.0",
     "jest-cli": "^18.0.0",
     "mobx": "^2.6.4",
+    "ptt-binding": "0.0.1",
     "react": "^15.4.1",
     "react-binding": "^0.8.0",
     "react-component-gulp-tasks": "^0.7.6",

@@ -85,13 +85,13 @@ export default class HtmlPagesRenderer extends React.Component {
 		var pages = this.props.pages;
 		if (pages === undefined) pages = isGrid ? schema.containers.map(function (container, i) {
 			return {pageNumber: i, container: container, pageBackground:container.props.background || pageBackground}
-		}) : transformToPages(schema.toJS(), pageHeight);
+		}) : transformToPages(_.isFunction(schema.toJS)?schema.toJS():schema, pageHeight);
 		
 		var pageBackground = (schema.props && schema.props.background) || {};
         
 		var items = schema.containers.map(function (container, i) {
 			var conProps = container.props;
-			var conBindings = container.bindings;
+			//var conBindings = container.bindings;
 			//if (conBindings !== undefined && dataContext !== undefined) conProps = WidgetRenderer.bindProps(conProps, conBindings, dataContext);
 			return {background: (conProps && conProps.background) || pageBackground}
 		}, this);
